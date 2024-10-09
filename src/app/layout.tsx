@@ -4,6 +4,7 @@ import "./style.css";
 import MainLayout from "@/RootLayout/MainLayout";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { SessionProvider } from "next-auth/react";
+import { Toaster } from "sonner";
 
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-children,
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -20,6 +21,7 @@ children,
     <html lang="en">
       <SessionProvider>
         <body className="">
+          <Toaster richColors />
           <MainLayout>
             {children}
           </MainLayout>

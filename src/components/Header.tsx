@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
 import Logo from "@/assets/images/logo.png";
 import { useState } from "react";
-import { NotificationIcon, MenuIcon, ToggleClose } from "@/utils/svgIcons"
+import { MenuIcon, ToggleClose } from "@/utils/svgIcons"
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 interface HeaderProps {
@@ -14,12 +14,10 @@ interface HeaderProps {
   isOpen: boolean;
 }
 const Header: React.FC<HeaderProps> = ({
-  notificationsCount,
   userImage,
   toggleSidebar,
   isOpen,
 }) => {
-  const [showNotifications, setShowNotifications] = useState(false);
   const router = useRouter();
   const [showData, setShowData] = useState(false);
   const pathname = usePathname();
@@ -64,41 +62,6 @@ const Header: React.FC<HeaderProps> = ({
         <h1 className="hidden lg:block section-title">{currentPageName}</h1>
 
         <div className="flex items-center space-x-[15px] md:space-x-[30px] relative">
-          <div className="relative flex">
-            <button
-              onClick={() => setShowNotifications(!showNotifications)}
-              className="relative focus:outline-none"
-            >
-              <span className="sr-only">View notifications</span>
-              <NotificationIcon />
-              {notificationsCount > 0 && (
-                <span className="absolute top-0 right-[1px] inline-block w-[6px] h-[6px] text-[0] font-bold text-white bg-[#E87223] rounded-full"></span>
-              )}
-            </button>
-
-            {showNotifications && (
-              <div className="absolute top-[25px] right-0 mt-2 w-[200px] md:w-64 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-                <ul className="py-1 text-sm text-gray-700">
-                  <li className="px-4 py-2 border-b">
-                    Re: Support Case (#12221)
-                    <br />
-                    <span className="text-xs text-gray-500">5h ago</span>
-                  </li>
-                  <li className="px-4 py-2 border-b">
-                    Support Case (#12008)
-                    <br />
-                    <span className="text-xs text-gray-500">Yesterday</span>
-                  </li>
-                  <li className="px-4 py-2">
-                    Quam Dapibus Pharetra Bibendum
-                    <br />
-                    <span className="text-xs text-gray-500">Last week</span>
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
-
           <div className=" cursor-pointer " onClick={()=> setShowData(!showData)}>
             <Image
               src={userImage}

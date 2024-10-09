@@ -12,8 +12,8 @@ export const loginAction = async (payload: any) => {
             await signIn('credentials', {
                 email: payload.email,
                 password: payload.password,
-                name: res.data.data.firstName + ' ' + res.data.data.lastName,
-                _id: res.data.data._id,
+                name: res?.data?.data.firstName + ' ' + res?.data?.data.lastName,
+                _id: res?.data?.data._id,
                 redirect: false,
             },
             )
@@ -23,8 +23,6 @@ export const loginAction = async (payload: any) => {
         return error.response.data
     }
 }
-
-
 
 
 export const logoutAction = async () => {
