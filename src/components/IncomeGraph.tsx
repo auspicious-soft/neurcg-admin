@@ -15,12 +15,18 @@ const data = [
   { name: 'Oct', value: 0 },
   { name: 'Nov', value: 2600 },
   { name: 'Dec', value: 2800 }
-];
+]
 
-const IncomeGraph: React.FC = () => {
+interface IncomeProps {
+    incomeThisMonth: number,
+    incomeData: object
+}
+
+const IncomeGraph = (props: IncomeProps) => {
+  const {incomeThisMonth,  incomeData} = props
   return (
     <Card sx={{ p: 2, backgroundColor: '#E87223', color: 'white', borderRadius: '10px', boxShadow: '0' }}>
-      <h2 className='text-2xl md:text-[36px] font-[700] mb-1 leading-[normal] '>$3,448</h2>
+      <h2 className='text-2xl md:text-[36px] font-[700] mb-1 leading-[normal] '>${incomeThisMonth}</h2>
       <h3 className='text-sm  '>Income this month</h3>
       <ResponsiveContainer width="100%" height={170}>
         <LineChart data={data}>

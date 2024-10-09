@@ -20,7 +20,7 @@ export const loginAction = async (payload: any) => {
         }
         return res.data
     } catch (error: any) {
-        return error.response.data
+        return error?.response?.data
     }
 }
 
@@ -29,7 +29,7 @@ export const logoutAction = async () => {
     try {
         await signOut()
     } catch (error: any) {
-        return error.response.data
+        return error?.response?.data
     }
 }
 

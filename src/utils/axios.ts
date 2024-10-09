@@ -4,8 +4,8 @@ import { getTokenCustom } from "@/actions";
 export const axiosInstance = axios.create({
     baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`,
     headers: {
-        [process.env.NEXT_ADMIN_HEADER_KEY as string]: process.env.NEXT_ADMIN_HEADER_VALUE as string,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'role' : 'admin'
     }
 })
 
@@ -16,7 +16,7 @@ const createAuthInstance = async () => {
             baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`,
             headers: {
                 Authorization: `Bearer ${token}`,
-                [process.env.NEXT_ADMIN_HEADER_KEY as string]: process.env.NEXT_ADMIN_HEADER_VALUE as string,
+                'role' : 'admin',
                 'Content-Type': 'application/json'
             },
         })

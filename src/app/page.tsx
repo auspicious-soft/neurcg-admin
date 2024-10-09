@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 import IncomeGraph from "@/components/IncomeGraph";
 import UserCards from "@/components/UserCards";
 import UsersGraph from "@/components/UsersGraph";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import thumbimg1 from "@/assets/images/video1.png"
 import thumbimg2 from "@/assets/images/video2.png"
 import thumbimg3 from "@/assets/images/video3.png"
@@ -10,10 +11,14 @@ import thumbimg4 from "@/assets/images/video4.png"
 import NewUserCard from "@/components/NewUserCard";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import useSWR from "swr";
+import { getDashboardStatsService } from "@/service/admin-service";
 
 
 export default function Home() {
   const session = useSession()
+  const [incomeData, setIncomeData] = useState()
+  const [userGrowthData, setUserGrowthData] = useState()
   useEffect(() => {
     if (!session.data) redirect('/login')
   }, [session])
@@ -67,10 +72,12 @@ export default function Home() {
       thumbnail: thumbimg2
     },
   ]
+  const { data, isLoading, error } = useSWR('/admin/dashboard', getDashboardStatsService)
+  const incomeThisMonth = data?.data?.data?.incomeThisMonth as number
   return (
     <div>
       <div className="grid md:grid-cols-[minmax(0,_5fr)_minmax(0,_7fr)] gap-5 ">
-        <IncomeGraph />
+        <IncomeGraph incomeThisMonth={incomeThisMonth} incomeData={data?.data?.data?.incomeData as object} />
         <UsersGraph />
       </div>
       <section className="my-5 md:my-10">
