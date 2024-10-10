@@ -1,23 +1,22 @@
-"use client"
+/* eslint-disable @typescript-eslint/no-unused-vars */
+'use client'
 import SearchBar from '@/components/SearchBar'
 import UserTable from '@/components/UserTable';
+import { getAllUserService } from '@/service/admin-service';
 import React from 'react'
+import useSWR from 'swr';
 
-const userData = [
-    { id: '101', name: 'Shakimblee Brower', subscriptionType: 'Free', email: 'love.marisa@mail.com' },
-    { id: '102', name: 'bullock,jamarr', subscriptionType: 'Premium', email: 'love.marisa@mail.com' },
-    { id: '103', name: 'Terrie Robbins', subscriptionType: 'Enterprise', email: 'love.marisa@mail.com' },
-    { id: '104', name: 'Sarah Rich', subscriptionType: 'Free', email: 'love.marisa@mail.com' },
-    { id: '105', name: 'Malaysia Hayes', subscriptionType: 'Premium', email: 'love.marisa@mail.com' },
-    { id: '106', name: 'Theresa Parham', subscriptionType: 'Enterprise', email: 'love.marisa@mail.com' },
-  ];
+
 export default function Page() {
+  const [query, setQuery] = React.useState('')
+  const { data, isLoading, error } = useSWR(`/admin/users?${query}`, getAllUserService, { revalidateOnFocus: false })
+  const usersData = data?.data
   return (
     <div>
-    <div className='flex justify-end mb-5'>
-    <SearchBar />
-    </div>
-      <UserTable customers={userData} />
+      <div className='flex justify-end mb-5'>
+        <SearchBar setQuery={setQuery} />
+      </div>
+      <UserTable usersData={usersData} />
     </div>
   )
 }

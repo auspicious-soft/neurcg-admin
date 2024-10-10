@@ -9,3 +9,9 @@ export const getDashboardStatsService = async(route: string) => {
     const axiosInstance = await getAxiosInstance()
     return axiosInstance.get(route)
 }
+
+
+export const getAllUserService = async(routhWithQuery: string) => { 
+    const axiosInstance = await getAxiosInstance()
+    return axiosInstance.get(routhWithQuery)
+}
