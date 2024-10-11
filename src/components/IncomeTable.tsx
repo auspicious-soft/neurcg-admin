@@ -1,36 +1,37 @@
 "use client"
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextLabel, PrevLabel } from '@/utils/svgIcons';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 
 interface Income {
-  id: string;
-  name: string;
-  subscriptionType: string;
-  amountPaid: string;
+  _id: string;
+  planType: string;
+  userName: string;
+  planAmount: number;
 }
 
-const dummyData: Income[] = [
-  { id: '101', name: 'Shakimblee Brower', subscriptionType: 'Free', amountPaid: '$0' },
-  { id: '102', name: 'bullock jamarr', subscriptionType: 'Premium', amountPaid: '$50' },
-  { id: '103', name: 'Terrie Robbins', subscriptionType: 'Enterprise', amountPaid: '$200' },
-  { id: '104', name: 'Sarah Rich', subscriptionType: 'Free', amountPaid: '$0' },
-  { id: '105', name: 'Malaysia Hayes', subscriptionType: 'Premium', amountPaid: '$50' },
-  { id: '106', name: 'Theresa Parham', subscriptionType: 'Enterprise', amountPaid: '$200' },
-  { id: '107', name: 'Armani Wellman', subscriptionType: 'Free', amountPaid: '$0' },
-];
+interface IncomePageProps {
+  incomeData: {
+    total: number;
+    data: Income[];
+    page: number
+    limit: number
+  }
+}
 
-const IncomeTable: React.FC = () => {
+const IncomeTable = (props: IncomePageProps) => {
+  const { incomeData } = props;
+  const total = incomeData?.total ?? 0;
+  const rowsPerPage = 10;
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(0);
+  const users = incomeData?.data ?? [];
 
-  const rowsPerPage = 4;
-
-  // Calculate pagination indexes
   const indexOfLastRow = (currentPage + 1) * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-
-  // Slice the current page rows from dummyData array
-  const currentRows = dummyData.slice(indexOfFirstRow, indexOfLastRow);
+  const currentIncome = users.slice(indexOfFirstRow, indexOfLastRow);
 
   const handlePageClick = (selectedItem: { selected: number }) => {
     setCurrentPage(selectedItem.selected);
@@ -50,25 +51,31 @@ const IncomeTable: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {currentRows.map((income) => (
-              <tr key={income.id}>
-                <td>#{income.id}</td>
-                <td>{income.name}</td>
-                <td>{income.subscriptionType}</td>
-                <td className='text-right lg:!pr-[90px]'>{income.amountPaid}</td>
+            { currentIncome.length > 0 ? (
+              currentIncome.map((income) => (
+                <tr key={income._id}>
+                  <td>#{income._id}</td>
+                  <td>{income.userName}</td>
+                  <td>{income.planType[0].toUpperCase() + income.planType.slice(1)}</td>
+                  <td className='text-right lg:!pr-[90px]'>&#8364;{income.planAmount / 100}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td className='w-full flex justify-center p-3 items-center' colSpan={4}>No data found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
 
       <div className='text-right mt-5 md:mt-7'>
         <ReactPaginate
-          previousLabel={<PrevLabel/>}
+          previousLabel={<PrevLabel />}
           nextLabel={<NextLabel />}
           breakLabel={'...'}
           breakClassName={'break-me'}
-          pageCount={Math.ceil(dummyData.length / rowsPerPage)} // Dynamic page count based on customers length
+          pageCount={Math.ceil(total / rowsPerPage)} // Dynamic page count based on customers length
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
           onPageChange={handlePageClick}

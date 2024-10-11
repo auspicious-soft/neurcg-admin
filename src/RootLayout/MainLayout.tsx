@@ -20,7 +20,7 @@ export default function MainLayout({
     return (
         <div>
             <div>
-            {!hideHeader.includes(pathname) &&
+                {!hideHeader.includes(pathname) &&
                     <Header
                         userImage={dp}
                         notificationsCount={3}
@@ -30,9 +30,10 @@ export default function MainLayout({
                 }
             </div>
             <div className="layout">
-                <div className="layout-left">
-                {!hideSideBar.includes(pathname) && <SideBar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />}
+                {!hideSideBar.includes(pathname) && <div className="layout-left">
+                    <SideBar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
                 </div>
+                }
                 <main className="layout-right overflo-custom ">
                     {children}
                 </main>

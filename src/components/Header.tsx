@@ -6,7 +6,7 @@ import Logo from "@/assets/images/logo.png";
 import { useState } from "react";
 import { MenuIcon, ToggleClose } from "@/utils/svgIcons"
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 interface HeaderProps {
   notificationsCount: number;
   userImage: string | StaticImageData;
@@ -18,7 +18,6 @@ const Header: React.FC<HeaderProps> = ({
   toggleSidebar,
   isOpen,
 }) => {
-  const router = useRouter();
   const [showData, setShowData] = useState(false);
   const pathname = usePathname();
 
@@ -37,13 +36,8 @@ const Header: React.FC<HeaderProps> = ({
   const handleLinkClick = () => {
     // setActiveLink(path);
     setShowData(false);
-  };
+  }
 
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    router.push('https://neur-cg.vercel.app/');
-  };
-  
   return (
     <header className="flex justify-between items-center p-5  md:py-[23px] md:px-[30px] bg-white ">
        
@@ -78,8 +72,8 @@ const Header: React.FC<HeaderProps> = ({
                 <span className="text-[#3A2C23] text-base ">My Profile</span>
               </Link>
               <div>
-              <a onClick={handleLogout}> 
-                <span className="text-[#3A2C23] text-base">Log Out</span>
+              <a onClick={() => signOut({ redirectTo: '/login' })} > 
+                <span className="text-[#3A2C23] text-base" >Log Out</span>
               </a>
               </div>
             </div>

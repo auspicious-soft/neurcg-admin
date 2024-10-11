@@ -15,3 +15,8 @@ export const getAllUserService = async(routhWithQuery: string) => {
     const axiosInstance = await getAxiosInstance()
     return axiosInstance.get(routhWithQuery)
 }
+
+export const getIncomeService = async(routeWithQuery: string) => {
+    const axiosInstance = await getAxiosInstance()
+    return axiosInstance.get(routeWithQuery)
+}
