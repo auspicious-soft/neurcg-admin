@@ -23,57 +23,32 @@ export default function Home() {
     if (!session.data) redirect('/login')
   }, [session])
 
+ 
+  const { data, isLoading, error } = useSWR('/admin/dashboard', getDashboardStatsService)
+  const incomeThisMonth = data?.data?.data?.incomeThisMonth as number
+  const UserData = data?.data?.data?.newUsersData
   const useCardData = [
     {
       id: 1,
       text: "New User",
-      value: 360,
+      value: data?.data?.data?.newUsers as number,
     },
     {
       id: 2,
       text: "Normal User",
-      value: 2500,
+      value: data?.data?.data?.normalUsers as number,
     },
     {
       id: 3,
       text: "Premium User",
-      value: 1560,
+      value: data?.data?.data?.proUsers as number,
     },
     {
       id: 4,
       text: "Total User",
-      value: 4060,
+      value: data?.data?.data?.totalUsers as number,
     },
   ]
-  const UserData = [
-    {
-      id: 1,
-      title: "Marisa Love",
-      thumbnail: thumbimg1,
-    },
-    {
-      id: 2,
-      title: "Lara Jean",
-      thumbnail: thumbimg2,
-    },
-    {
-      id: 3,
-      title: "John Aster",
-      thumbnail: thumbimg3
-    },
-    {
-      id: 4,
-      title: "Larry Page",
-      thumbnail: thumbimg4
-    },
-    {
-      id: 5,
-      title: "Larry Page",
-      thumbnail: thumbimg2
-    },
-  ]
-  const { data, isLoading, error } = useSWR('/admin/dashboard', getDashboardStatsService)
-  const incomeThisMonth = data?.data?.data?.incomeThisMonth as number
   return (
     <div>
       <div className="grid md:grid-cols-[minmax(0,_5fr)_minmax(0,_7fr)] gap-5 ">
@@ -95,11 +70,17 @@ export default function Home() {
       <section>
         <h2 className="section-title mb-5">New Users</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
-          {UserData.map((data) => (
+          {UserData?.map((data: {
+              _id: string;
+              firstName: string;
+              lastName: string;
+              email: string;
+              profilePic: string;
+          }) => (
             <NewUserCard
-              key={data.id}
-              title={data.title}
-              thumbnail={data.thumbnail}
+              key={data._id}
+              title={data.firstName + ' ' + data.lastName}
+              thumbnail={data.profilePic}
             />
           ))}
         </div>
