@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { EditImgIcon } from '@/utils/svgIcons';
 import previmg2 from "@/assets/images/previmg.png"
-import CreditScore from '@/components/CreditScore';
+// import CreditScore from '@/components/CreditScore';
 import AvatarsCreated from '@/components/AvatarsCreated';
 import Referral from '@/components/Referral';
 import thumbimg1 from "@/assets/images/video1.png"
@@ -12,24 +14,26 @@ import thumbimg2 from "@/assets/images/video2.png"
 import thumbimg3 from "@/assets/images/video3.png"
 import thumbimg4 from "@/assets/images/video4.png"
 import NeurcgCard from '@/components/NeurcgCard';
+import useSWR from 'swr';
+import { getASingleUserService } from '@/service/admin-service';
 
-const CreditScores =[
-  {
-    id: 1,
-    text: "Animation Credit Left",
-    value: 148,
-  },
-  {
-      id: 2,
-      text: "Audio Upload Credit Left",
-      value: 48,
-    },
-    {
-      id: 3,
-      text: "Avatar Creation Credit Left",
-      value: 18,
-    },
-] 
+// const CreditScores =[
+//   {
+//     id: 1,
+//     text: "Animation Credit Left",
+//     value: 148,
+//   },
+//   {
+//       id: 2,
+//       text: "Audio Upload Credit Left",
+//       value: 48,
+//     },
+//     {
+//       id: 3,
+//       text: "Avatar Creation Credit Left",
+//       value: 18,
+//     },
+// ] 
 const VideoData =[
     {
       id:1,
@@ -56,7 +60,7 @@ const VideoData =[
 const ProfilePage = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { id } = useParams(); 
-
+  const { data, isLoading, error } = useSWR(`/admin/users/${id}`, getASingleUserService)
  
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -101,6 +105,7 @@ const ProfilePage = () => {
                 alt="Preview"
                 width={177}
                 height={177}
+                fill
                 className="rounded-full h-full object-cover"
               />
               <button
@@ -128,7 +133,7 @@ const ProfilePage = () => {
             </div>
           )}
         </div>
-        <div className="grid gap-[6px] w-full">
+        {/* <div className="grid gap-[6px] w-full">
           {CreditScores.map((item)=>(
             <CreditScore 
             key={item.id}
@@ -136,17 +141,17 @@ const ProfilePage = () => {
             value={item.value}
             />
           ))}
-        </div>
+        </div> */}
           </div>
           <div className=' mt-[30px] '>
             <h1 className='text-xl md:text-[28px] text-[#3A2C23] font-semibold mb-[15px]'>Marisa Love</h1>
             <div className='main-wrap flex justify-between items-center mb-3'>
             <p className='title'>Email Address</p>
-            <p className='values'>love.marisa@mail.com</p>
+            <p className='values'>{data?.data?.data?.user?.email}</p>
             </div>
             <div className='main-wrap flex justify-between items-center mb-3'>
             <p className='title'>Date Of Birth</p>
-            <p className='values'>Aug 27, 2004</p>
+            <p className='values'>{data?.data?.data?.user?.dob}</p>
             </div>
             <div className='main-wrap flex justify-between items-center mb-3'>
             <p className='title'>Phone Number</p>
@@ -163,12 +168,13 @@ const ProfilePage = () => {
           </div>
     </div>
     <div className='grid gap-5 md:grid-cols-2 my-5 md:my-[50px] '>
-    <AvatarsCreated />
-    <Referral /> 
+    <AvatarsCreated data= {data?.data?.data?.avatarsUsed}/>
+    <Referral data = {data?.data?.data?.user}/> 
     </div>
     <section className=''>
         <h2 className='section-title mb-[10px] md:mb-5'>Projects Created</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
+        {/* data?.data?.data?.projects */}
         {VideoData.map((data) =>(
             <NeurcgCard
             key= {data.id}

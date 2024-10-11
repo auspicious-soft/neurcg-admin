@@ -23,7 +23,7 @@ const UserTable = (props: any) => {
   };
 
   const handleViewProfile = (id: string) => {
-    router.push(`/profiles/${id}`);
+    router.push(`/users/${id}`);
   };
 
   return (
@@ -49,7 +49,7 @@ const UserTable = (props: any) => {
                   <td>{customer.email}</td>
                   <td>
                     <button
-                      onClick={() => handleViewProfile(customer.id)}
+                      onClick={() => handleViewProfile(customer._id)}
                       className="text-[#26395E] hover:underline"
                     >
                       View

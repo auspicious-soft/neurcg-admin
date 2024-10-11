@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import Image from 'next/image';
 import img1 from "@/assets/images/video1.png";
@@ -9,17 +11,18 @@ import img4 from "@/assets/images/video4.png";
 //   images: string[];  // Array of image URLs
 // }
 const avatarUrls = [
-    img1,   
-    img2, 
-    img3,
-    img4,
-    img1,   
-    img2, 
-    img3,
-    img4,
-  ];
-  //const UserTable: React.FC<UserTableProps> = ({ customers }) => {
-const AvatarsCreated = () => {
+  img1,
+  img2,
+  img3,
+  img4,
+  img1,
+  img2,
+  img3,
+  img4,
+];
+//const UserTable: React.FC<UserTableProps> = ({ customers }) => {
+const AvatarsCreated = (props: any) => {
+  const { data } = props
   return (
     <div className="bg-white rounded-[8px] p-5 md:p-[30px] ">
       <h2 className="section-title mb-6">Avatars Created</h2>
