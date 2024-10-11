@@ -73,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({
               </Link>
               <div>
               <a onClick={() => signOut({ redirectTo: '/login' })} > 
-                <span className="text-[#3A2C23] text-base" >Log Out</span>
+                <span className="text-[#3A2C23] text-base cursor-pointer" >Log Out</span>
               </a>
               </div>
             </div>

@@ -77,12 +77,6 @@ const ProfilePage = () => {
     }
   };
 
-  const triggerFileInputClick = () => {
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.click();
-    }
-  }
 
   return (
     <div className="">
@@ -108,13 +102,6 @@ const ProfilePage = () => {
                 fill
                 className="rounded-full h-full object-cover"
               />
-              <button
-                type="button"
-                onClick={triggerFileInputClick}
-                className="absolute bottom-[16px] right-1"
-              >
-                <EditImgIcon />
-              </button>
             </div>
           ) : (
             <div className="grid place-items-center h-full w-full">
@@ -126,9 +113,6 @@ const ProfilePage = () => {
                   height={177}
                   className="rounded-full"
                 />
-                <p className="absolute bottom-[16px] right-1 pointer-events-none">
-                  <EditImgIcon />
-                </p>
               </div>
             </div>
           )}
