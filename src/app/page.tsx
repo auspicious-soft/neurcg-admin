@@ -52,7 +52,7 @@ export default function Home() {
   return (
     <div>
       <div className="grid md:grid-cols-[minmax(0,_5fr)_minmax(0,_7fr)] gap-5 ">
-        <IncomeGraph incomeThisMonth={incomeThisMonth} incomeData={data?.data?.data?.incomeData as object} />
+        <IncomeGraph incomeThisMonth={incomeThisMonth} incomeData={data?.data?.data?.incomeData} />
         <UsersGraph />
       </div>
       <section className="my-5 md:my-10">
