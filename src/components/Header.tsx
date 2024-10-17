@@ -26,8 +26,10 @@ const Header: React.FC<HeaderProps> = ({
     "/income": "Income",
     "/users": "Users",
     "/profiles": "Users",
+    "/notifications" : "Notifications",
+    "/avatars": "Avatars",
   };
-
+ 
   const currentPageName = pageNames[pathname] || "Users";
 
   // const handleDataShow = () => {

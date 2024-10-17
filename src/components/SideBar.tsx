@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { usePathname } from 'next/navigation'; 
 import Link from "next/link";
-import { IncomeIcon, HomeIcon, ProfileIcon, } from "@/utils/svgIcons" // Import Hamburger and Close icons
+import { IncomeIcon, HomeIcon, ProfileIcon, Notification, AvatarIcon, } from "@/utils/svgIcons" // Import Hamburger and Close icons
 
 
 interface SideBarProps {
@@ -31,7 +31,7 @@ const SideBar = ({ isOpen, toggleSidebar }: SideBarProps) => {
       document.body.classList.remove('overflow-hidden');
     };
   }, [isOpen]);
-
+ 
 
   return (
     <div className="side-bar z-2 relative overflo-custom h-[100%] overflow-y-scroll flex lg:flex-col justify-between">
@@ -42,7 +42,7 @@ const SideBar = ({ isOpen, toggleSidebar }: SideBarProps) => {
           <ul className="navList">
             <li className={isActive('/')}>
               <Link href="/"
-                onClick={handleLinkClick}
+                onClick={handleLinkClick} 
                >
                 <HomeIcon/>
                 <span>Home</span>
@@ -52,6 +52,18 @@ const SideBar = ({ isOpen, toggleSidebar }: SideBarProps) => {
               <Link href="/users"  onClick={handleLinkClick}>
                 <ProfileIcon />
                 <span>Users</span>
+              </Link>
+            </li>
+            <li className={isActive('/notifications')}>
+              <Link href="/notifications"  onClick={handleLinkClick}>
+                <Notification/>
+                <span>Notifications</span>
+              </Link>
+            </li>
+            <li className={isActive('/avatars')}>
+              <Link href="/avatars"  onClick={handleLinkClick}>
+                <AvatarIcon/>
+                <span>Avatars</span>
               </Link>
             </li>
             {/* <p className="text-[#818999] text-[10px] font-medium mt-5 mb-[2px] pl-5">SERVICES</p> */}
