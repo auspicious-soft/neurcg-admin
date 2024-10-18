@@ -1,17 +1,21 @@
-"use client"
-import Image from 'next/image';
-import { useState } from 'react';
-import AvatarEditor from 'react-avatar-edit';
-import Modal from 'react-modal';
+"use client";
+import React, { useState, useCallback } from "react";
+import Modal from "react-modal";
+import Cropper, { Area } from "react-easy-crop";
+import Image from "next/image";
+import { DeleteIcon } from "@/utils/svgIcons";
+import deleteCross from "@/assets/images/delete.svg";
 
-
-const Page = () => {
+const AvatarSection = () => {
   const [avatars, setAvatars] = useState<string[]>([]);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
-  // Handle file selection
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -26,91 +30,124 @@ const Page = () => {
     }
   };
 
+  const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
 
-  // Handle the cropping event
-  const onCrop = (croppedImage: string) => {
-    setPreview(croppedImage);  // Save cropped image temporarily
-  };
+  const getCroppedImg = useCallback(async () => {
+    if (!selectedFile || !croppedAreaPixels) return null;
 
-  // Handle saving the avatar with specific dimensions (169x158)
-  const handleSaveAvatar = () => {
-    if (preview) {
-      const img = new window.Image();  // Use native browser Image()
-      img.src = preview;
+    const image = new window.Image();
+    image.src = selectedFile;
 
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
+    return new Promise<string | null>((resolve) => {
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        if (!ctx) return resolve(null);
         canvas.width = 169;
         canvas.height = 158;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, 169, 158);
-          const resizedImage = canvas.toDataURL();
-          setAvatars((prevAvatars) => [...prevAvatars, resizedImage]);
-        }
-      };
 
-      setIsModalOpen(false);
+        ctx.drawImage(
+          image,
+          croppedAreaPixels.x,
+          croppedAreaPixels.y,
+          croppedAreaPixels.width,
+          croppedAreaPixels.height,
+          0,
+          0,
+          169,
+          158
+        );
+        resolve(canvas.toDataURL("image/jpeg"));
+      };
+    });
+  }, [selectedFile, croppedAreaPixels]);
+
+  const handleSaveAvatar = async () => {
+    const croppedImage = await getCroppedImg();
+    if (croppedImage) {
+      setAvatars((prev) => [...prev, croppedImage]);
+      setIsModalOpen(false); 
     }
   };
-  const handleDeleteAvatar = (index: number) => {
-    setAvatars((prevAvatars) => prevAvatars.filter((_, i) => i !== index));
+
+  const handleDeleteAvatar = () => {
+    if (deleteIndex !== null) {
+      setAvatars((prevAvatars) => prevAvatars.filter((_, i) => i !== deleteIndex));
+      setIsDeleteOpen(false);
+      setDeleteIndex(null);
+    }
+  };
+
+  const openDeleteModal = (index: number) => {
+    setDeleteIndex(index);
+    setIsDeleteOpen(true);
   };
 
   return (
     <div className="">
-        <div className='flex justify-end'>
+      <div className="flex justify-end">
         <button
-        className="bg-orange-500 text-white px-4 py-2 rounded"
-        onClick={() => document.getElementById('avatarInput')?.click()}
-      >
-        Add Avatar
-      </button>
-        </div>
-      {/* Avatar Grid */}
-      <div className="grid grid-cols-5 gap-4 mb-4">
+          className="bg-[#E87223] text-white px-4 py-2 rounded"
+          onClick={() => document.getElementById("avatarInput")?.click()}
+        >
+          Add Avatar
+        </button>
+      </div>
+      <div className="grid grid-cols-6 gap-5">
         {avatars.map((avatar, index) => (
           <div key={index} className="relative group">
-            <Image src={avatar} width={169} height={158} alt="Avatar" className="rounded-full w-20 h-20 object-cover" />
-          
-            <button
-              className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => handleDeleteAvatar(index)}
-            >
-              Remove
-            </button>
+            <Image width={300} height={300} src={avatar} alt="Avatar" className="rounded-[5px] object-cover" /> 
+            
+            <div className="absolute left-1/2 -translate-x-1/2 bottom-[14px]">
+              <button
+                className="justify-center bg-[#E87223] text-white text-xs flex items-center gap-2.5 py-1 px-3 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => openDeleteModal(index)}
+              >
+                <DeleteIcon />
+                Remove
+              </button>
+            </div>
           </div>
         ))}
       </div>
+
       <input
         type="file"
         id="avatarInput"
-        className="hidden "
+        className="hidden"
         accept="image/*"
         onChange={handleFileChange}
       />
 
-      {/* React Modal for cropping tool */}
+      {/* Crop Modal */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
         contentLabel="Edit Avatar"
-        className="modal max-w-[1180px] px-8 bg-white mx-auto rounded-[20px] w-full max-h-[90vh] overflow-scroll overflo-custom "
-        overlayClassName="w-full h-full z-[5] fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center"
+        bodyOpenClassName="overflow-hidden"
+        className="bg-white w-[90%] rounded-[20px] p-[40px] h-full max-h-[90vh] overflow-y-scroll"
+        overlayClassName="z-[5] w-full h-full fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center"
       >
         <h2 className="text-lg mb-4">Crop your avatar</h2>
         {selectedFile && (
-        <AvatarEditor
-         width={300}
-         height={300}
-         onCrop={onCrop}
-         src={selectedFile}  // `image` instead of `src`
-         borderRadius={5}  
-        />
+          <div className="relative w-full h-[400px]  ">
+            <Cropper
+              image={selectedFile}
+              crop={crop}
+              zoom={zoom}
+              aspect={169 / 158}
+              onCropChange={setCrop}
+              onZoomChange={setZoom}
+              onCropComplete={onCropComplete}
+            />
+          </div>
         )}
         <div className="flex justify-end mt-4">
           <button
-            className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+            className="bg-[#E87223] text-white px-4 py-2 rounded mr-2"
             onClick={handleSaveAvatar}
           >
             Save Avatar
@@ -123,8 +160,36 @@ const Page = () => {
           </button>
         </div>
       </Modal>
+
+      <Modal
+        isOpen={isDeleteOpen}
+        onRequestClose={() => setIsDeleteOpen(false)}
+        contentLabel="Delete Avatar"
+        bodyOpenClassName="overflow-hidden"
+        className="max-w-[584px] mx-auto bg-white rounded-xl w-full p-5 bg-flower"
+        overlayClassName="z-[5] w-full h-full fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center"
+      >
+        <Image src={deleteCross} alt="delete" height={174} width={174} className="mx-auto" />
+        <h2 className="text-[20px] text-center leading-normal ">Are you sure you want to Delete?</h2>
+        <div className="flex items-center justify-center gap-6 mt-8">
+          <button 
+            type="button"
+            onClick={handleDeleteAvatar}
+            className="py-[10px] px-8 bg-[#E87223] text-white rounded"
+          >
+            Yes, Delete
+          </button>
+          <button 
+            type="button"
+            onClick={() => setIsDeleteOpen(false)}
+            className="py-[10px] px-8 bg-[#3A2C23] text-white rounded"
+          >
+            No
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };
 
-export default Page;
+export default AvatarSection;

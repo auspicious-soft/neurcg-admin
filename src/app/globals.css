@@ -217,7 +217,12 @@ td, th {
   border: 4px solid #fff;
   outline: 1px solid #FFE2CE;
 }
-
+.bg-flower {
+  background-image: url(../assets/images/card-bg.png);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: cover;
+}
 
 
 
