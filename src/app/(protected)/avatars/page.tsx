@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState, useCallback } from "react";
 import Modal from "react-modal";
@@ -5,16 +6,20 @@ import Cropper, { Area } from "react-easy-crop";
 import Image from "next/image";
 import { DeleteIcon } from "@/utils/svgIcons";
 import deleteCross from "@/assets/images/delete.svg";
+import useSWR from "swr";
+import { getAvatarsService, deleteAvatarService } from "@/service/admin-service";
+import { toast } from "sonner";
 
 const AvatarSection = () => {
-  const [avatars, setAvatars] = useState<string[]>([]);
+  const { data, isLoading, mutate } = useSWR('/admin/avatars', getAvatarsService, { revalidateOnFocus: false });
+  const avatarsFetched = data?.data?.data || [];
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+  const [deleteAvatarId, setDeleteAvatarId] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -68,22 +73,21 @@ const AvatarSection = () => {
   const handleSaveAvatar = async () => {
     const croppedImage = await getCroppedImg();
     if (croppedImage) {
-      setAvatars((prev) => [...prev, croppedImage]);
-      setIsModalOpen(false); 
+      setIsModalOpen(false);
     }
   };
 
-  const handleDeleteAvatar = () => {
-    if (deleteIndex !== null) {
-      setAvatars((prevAvatars) => prevAvatars.filter((_, i) => i !== deleteIndex));
-      setIsDeleteOpen(false);
-      setDeleteIndex(null);
+  const handleDeleteAvatar = async () => {
+    if (deleteAvatarId) {
+      try {
+        await deleteAvatarService(`/admin/avatars/${deleteAvatarId}`);
+        toast.success('Avatar deleted successfully');
+        mutate()
+        setIsDeleteOpen(false);
+      } catch (error) {
+        toast.error('Failed to delete avatar');
+      }
     }
-  };
-
-  const openDeleteModal = (index: number) => {
-    setDeleteIndex(index);
-    setIsDeleteOpen(true);
   };
 
   return (
@@ -97,21 +101,29 @@ const AvatarSection = () => {
         </button>
       </div>
       <div className="grid grid-cols-6 gap-5">
-        {avatars.map((avatar, index) => (
+        {!isLoading ? avatarsFetched.map((avatar: any, index: string) => (
           <div key={index} className="relative group">
-            <Image width={300} height={300} src={avatar} alt="Avatar" className="rounded-[5px] object-cover" /> 
-            
+            <Image width={300} height={300} src={`https://picsum.photos/200/300`} alt="Avatar" className="rounded-[5px] object-cover" />
+
             <div className="absolute left-1/2 -translate-x-1/2 bottom-[14px]">
               <button
                 className="justify-center bg-[#E87223] text-white text-xs flex items-center gap-2.5 py-1 px-3 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={() => openDeleteModal(index)}
+                onClick={() => {
+                  setDeleteAvatarId(avatar._id);
+                  setIsDeleteOpen(true);
+                }}
               >
                 <DeleteIcon />
                 Remove
               </button>
             </div>
           </div>
-        ))}
+        ))
+          :
+          <div className="flex justify-center items-center col-span-6 h-[300px]">
+            <span className="text-lg">Loading...</span>
+          </div>
+        }
       </div>
 
       <input
@@ -133,7 +145,7 @@ const AvatarSection = () => {
       >
         <h2 className="text-lg mb-4">Crop your avatar</h2>
         {selectedFile && (
-          <div className="relative w-full h-[400px]  ">
+          <div className="relative w-full h-[400px]">
             <Cropper
               image={selectedFile}
               crop={crop}
@@ -170,16 +182,16 @@ const AvatarSection = () => {
         overlayClassName="z-[5] w-full h-full fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center"
       >
         <Image src={deleteCross} alt="delete" height={174} width={174} className="mx-auto" />
-        <h2 className="text-[20px] text-center leading-normal ">Are you sure you want to Delete?</h2>
+        <h2 className="text-[20px] text-center leading-normal">Are you sure you want to Delete?</h2>
         <div className="flex items-center justify-center gap-6 mt-8">
-          <button 
+          <button
             type="button"
             onClick={handleDeleteAvatar}
             className="py-[10px] px-8 bg-[#E87223] text-white rounded"
           >
             Yes, Delete
           </button>
-          <button 
+          <button
             type="button"
             onClick={() => setIsDeleteOpen(false)}
             className="py-[10px] px-8 bg-[#3A2C23] text-white rounded"

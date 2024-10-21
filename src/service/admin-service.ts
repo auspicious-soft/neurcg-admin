@@ -10,7 +10,7 @@ export const getDashboardStatsService = async (route: string) => {
     return axiosInstance.get(route)
 }
 
-
+// Users and Income Tables
 export const getAllUserService = async (routhWithQuery: string) => {
     const axiosInstance = await getAxiosInstance()
     return axiosInstance.get(routhWithQuery)
@@ -26,7 +26,7 @@ export const getIncomeService = async (routeWithQuery: string) => {
     return axiosInstance.get(routeWithQuery)
 }
 
-
+// Notificaiton and Newsletter
 export const sendNewsletterService = async (payload: any) => {
     const axiosInstance = await getAxiosInstance()
     return axiosInstance.post('/admin/send-latest-updates', payload)
@@ -40,4 +40,15 @@ export const sendNotificationToAllService = async (payload: any) => {
 export const sendNotificationToSpecificUsers = async(payload: any) => {
     const axiosInstance = await getAxiosInstance()
     return axiosInstance.post('/admin/send-notification-to-specific-users', payload)
+}
+
+// Avatars
+export const getAvatarsService = async (route: string) => {
+    const axiosInstance = await getAxiosInstance()
+    return axiosInstance.get(route)
+}
+
+export const deleteAvatarService = async (route: string) => {
+    const axiosInstance = await getAxiosInstance()
+    return axiosInstance.delete(route)
 }
