@@ -1,26 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-'use client'
-import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ReactPaginate from 'react-paginate';
 import { NextLabel, PrevLabel } from '@/utils/svgIcons';
 
 const UserTable = (props: any) => {
-  const { usersData } = props;
+  const { usersData , setQuery} = props;
   const total = usersData?.total ?? 0;
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(0);
   const users = usersData?.data ?? [];
 
-  const indexOfLastRow = (currentPage + 1) * rowsPerPage;
-  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentUsers = users.slice(indexOfFirstRow, indexOfLastRow);
-
   const handlePageClick = (selectedItem: { selected: number }) => {
-    setCurrentPage(selectedItem.selected);
-  };
+    setQuery(`page=${selectedItem.selected + 1}&limit=${rowsPerPage}`)
+  }
 
   const handleViewProfile = (id: string) => {
     router.push(`/users/${id}`);
@@ -40,26 +32,27 @@ const UserTable = (props: any) => {
             </tr>
           </thead>
           <tbody>
-            {currentUsers.length > 0 ? (
-              currentUsers.map((customer: any, index: number) => (
-                <tr key={customer._id} className={`${index % 2 === 0 ? 'bg--100' : 'bg-whi'}`}>
-                  <td>#{customer._id.slice(0, 5)}</td>
-                  <td>{customer.firstName + ' ' + customer.lastName}</td>
-                  <td>{customer.planType[0].toUpperCase() + customer.planType.slice(1)}</td>
-                  <td>{customer.email}</td>
-                  <td>
-                    <button
-                      onClick={() => handleViewProfile(customer._id)}
-                      className="text-[#26395E] hover:underline"
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              ))
+            {users.length > 0 ? (
+              users
+                .map((customer: any, index: number) => (
+                  <tr key={customer._id} className={`${index % 2 === 0 ? 'bg--100' : 'bg-whi'}`}>
+                    <td>#{customer._id.slice(0, 5)}</td>
+                    <td>{customer.firstName + ' ' + customer.lastName}</td>
+                    <td>{customer.planType[0].toUpperCase() + customer.planType.slice(1)}</td>
+                    <td>{customer.email}</td>
+                    <td>
+                      <button
+                        onClick={() => handleViewProfile(customer._id)}
+                        className="text-[#26395E] hover:underline"
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))
             ) : (
               <tr className="w-full flex justify-center p-3 items-center">
-                <td>No data found</td>
+                <td colSpan={5}>No data found</td>
               </tr>
             )}
           </tbody>

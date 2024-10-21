@@ -17,7 +17,7 @@ export default function page() {
         <SearchBar setQuery={setQuery} />
       </div>
       <div>
-        <IncomeTable incomeData = {incomeData}/>
+        <IncomeTable incomeData = {incomeData} setQuery = {setQuery}/>
       </div>
 
     </div>

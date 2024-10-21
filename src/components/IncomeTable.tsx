@@ -19,22 +19,17 @@ interface IncomePageProps {
     page: number
     limit: number
   }
+  setQuery: React.Dispatch<React.SetStateAction<string>>
 }
 
 const IncomeTable = (props: IncomePageProps) => {
-  const { incomeData } = props;
+  const { incomeData, setQuery } = props;
   const total = incomeData?.total ?? 0;
   const rowsPerPage = 10;
-  const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(0);
-  const users = incomeData?.data ?? [];
-
-  const indexOfLastRow = (currentPage + 1) * rowsPerPage;
-  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentIncome = users.slice(indexOfFirstRow, indexOfLastRow);
+  const currentIncome = incomeData?.data ?? [];
 
   const handlePageClick = (selectedItem: { selected: number }) => {
-    setCurrentPage(selectedItem.selected);
+     setQuery(`page=${selectedItem.selected + 1}&limit=${rowsPerPage}`)
   };
 
 

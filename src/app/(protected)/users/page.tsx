@@ -16,7 +16,7 @@ export default function Page() {
       <div className='flex justify-end mb-5'>
         <SearchBar setQuery={setQuery} />
       </div>
-      <UserTable usersData={usersData} />
+      <UserTable usersData={usersData} setQuery = {setQuery}/>
     </div>
   )
 }
