@@ -35,10 +35,10 @@ const Header: React.FC<HeaderProps> = ({
   // const handleDataShow = () => {
   //   setShowData(!showData);
   // };
-  const handleLinkClick = () => {
-    // setActiveLink(path);
-    setShowData(false);
-  }
+  // const handleLinkClick = () => {
+  //   // setActiveLink(path);
+  //   setShowData(false);
+  // }
 
   return (
     <header className="flex justify-between items-center p-5  md:py-[23px] md:px-[30px] bg-white ">
@@ -69,13 +69,13 @@ const Header: React.FC<HeaderProps> = ({
              
           </div>
           {showData && (
-            <div className=" text-right absolute z-[2] top-[40px] right-0 w-[150px] h-[100px] bg-white p-5 rounded-lg shadow-[0_4px_4px_0_rgba(0,0,0,0.08)] ">
-             <Link href="/my-profile" onClick={handleLinkClick}>
+            <div className="text-right absolute z-[2] top-[40px] right-0 w-[150px] h-auto bg-white p-3 rounded-lg shadow-[0_4px_4px_0_rgba(0,0,0,0.08)] ">
+             {/* <Link href="/my-profile" onClick={handleLinkClick}>
                 <span className="text-[#3A2C23] text-base ">My Profile</span>
-              </Link>
+              </Link> */}
               <div>
               <a onClick={() => signOut({ redirectTo: '/login' })} > 
-                <span className="text-[#3A2C23] text-base cursor-pointer" >Log Out</span>
+                <span className="text-[#e87223] text-base cursor-pointer font-bold flex items-center justify-center" >Log Out</span>
               </a>
               </div>
             </div>
