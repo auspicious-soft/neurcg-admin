@@ -26,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({
     "/income": "Income",
     "/users": "Users",
     "/profiles": "Users",
-    "/notifications" : "Notifications",
+  "/notifications" : "Notifications",
     "/avatars": "Avatars",
   };
  
@@ -64,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({
               alt="User Profile"
               width={34}
               height={34}
-              className="rounded-full"
+              className="rounded-full w-10 h-10"
             />
              
           </div>

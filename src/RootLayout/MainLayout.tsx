@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import SideBar from '@/components/SideBar';
-import dp from "@/assets/images/profilepic.png";
+import dp from "@/assets/images/wave-bg.png";
 import { usePathname } from 'next/navigation';
 
 export default function MainLayout({
