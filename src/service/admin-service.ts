@@ -43,6 +43,11 @@ export const sendNotificationToSpecificUsers = async(payload: any) => {
 }
 
 // Avatars
+export const addAvatarService = async (route: string, payload: any) => {
+    const axiosInstance = await getAxiosInstance()
+    return axiosInstance.post(route, payload)
+}
+
 export const getAvatarsService = async (route: string) => {
     const axiosInstance = await getAxiosInstance()
     return axiosInstance.get(route)

@@ -6,8 +6,8 @@ export const convertDateToMonth = (date: string) => {
         case '02':
             return 'Feb'
         case '03':
-            return 'Mar'    
-        case '04':              
+            return 'Mar'
+        case '04':
             return 'Apr'
         case '05':
             return 'May'
@@ -28,4 +28,8 @@ export const convertDateToMonth = (date: string) => {
         default:
             return 'Invalid date'
     }
+}
+
+export const getImageUrl = (subPath: string): string => {
+    return `${process.env.NEXT_PUBLIC_AWS_BUCKET_PATH}${subPath}`
 }

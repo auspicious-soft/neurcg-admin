@@ -73,9 +73,10 @@ const Page = () => {
     setSelectedOptions(selected)
   }
   const handleSubmit = async () => {
-    const title = formData.title;
-    const message = formData.message;
-    if (!title || !message) return toast.warning('Please fill all fields')
+    const title = formData.title
+    const message = formData.message
+    if (!title || !message) return toast.warning('Please fill all required fields')
+    if(sendToSpecific && selectedOptions.length === 0) return toast.warning('Please select atleast one user')
     if (activeTab === 'notification') {
       startTranstion(async () => {
         if (!sendToSpecific) {
@@ -162,7 +163,7 @@ const Page = () => {
           {sendToSpecific && (
             <div className="mt-7 border border-[#FFE2CE] py-4 px-7 rounded-[5px] bg-white ">
               {/* Person selection dropdown */}
-              <Select value={selectedOptions} onChange={handleSelectChange} required options={modifiedUsersFromDatabase} isMulti closeMenuOnSelect={false} styles={customStyles} className='outline-none border-none' />
+              <Select  value={selectedOptions} onChange={handleSelectChange} required options={modifiedUsersFromDatabase} isMulti closeMenuOnSelect={false} styles={customStyles} className='outline-none border-none' />
             </div>
           )}
         </div>
