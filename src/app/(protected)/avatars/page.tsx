@@ -29,7 +29,7 @@ const getRadianAngle = (degreeValue: number) => {
 };
 
 const AvatarSection = () => {
-  const { data, isLoading, mutate } = useSWR('/admin/avatars', getAvatarsService, { revalidateOnFocus: false });
+  const { data, isLoading, mutate } = useSWR('/admin/avatars', getAvatarsService);
   const avatarsFetched = data?.data?.data || [];
   const [selectedFile, setSelectedFile] = useState<{ file: File, preview: string } | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -177,13 +177,13 @@ const AvatarSection = () => {
         // Save to backend
         await addAvatarService('/admin/avatars', { avatarUrl, name: filename });
         toast.success('Avatar uploaded successfully');
-        mutate();
         setIsModalOpen(false);
-
+        
         // Cleanup
         if (selectedFile.preview) {
           URL.revokeObjectURL(selectedFile.preview);
         }
+        mutate()
         setSelectedFile(null)
       } catch (error) {
         console.error('Error uploading avatar:', error)
