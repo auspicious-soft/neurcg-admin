@@ -9,21 +9,52 @@ import loginImg from "@/assets/images/loginimg.png";
 import Link from "next/link";
 import { updatePasswordServiceAfterOtpVerified } from "@/service/admin-service";
 import { toast } from "sonner";
+import { useEffect, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Home() {
-  const handleSubmit = (event: React.FormEvent) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition()
+  useEffect(() => {
+    const otp = searchParams.get('otp')
+    if (!otp) {
+      router.push('/forgotpassword')
+      // toast.error('Please complete the forgot password process first');
+    }
+  }, [router, searchParams])
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
     const newPassword = (form.elements.namedItem('newPassword') as HTMLInputElement).value;
     const confirmPassword = (form.elements.namedItem('confirmPassword') as HTMLInputElement).value;
-
+    const otp = searchParams.get('otp');
     if (newPassword === confirmPassword) {
-      //Todo: Continue from here with send otp as well see backend in ref AND protect this route if otp exists in locally otherwise redirect to /forgot-password .....
-        // const response = await updatePasswordServiceAfterOtpVerified()
-    } else {
+      startTransition(async () => {
+        try {
+          const response = await updatePasswordServiceAfterOtpVerified({password: newPassword as string, otp: otp as string})
+          if (response.status === 200) {
+            toast.success('Password updated successfully')
+            router.push('/login')
+          }
+          else {
+            toast.error('Something went wrong')
+          }
+        } catch (error: any) {
+          if (error.status === 404) {
+            toast.error('Invalid OTP');
+          } else {
+            toast.error('Something went wrong');
+          }
+        }
+      })
+    }
+
+    else {
       toast.warning('Password must match')
     }
-  };
+  }
 
   return (
     <div className=" ">
@@ -40,7 +71,7 @@ export default function Home() {
               <div className="mb-4 md:mb-[24px]">
                 <input type="password" name="confirmPassword" placeholder="Confirm Password" id="confirmPassword" />
               </div>
-              <button type="submit" className="button inline-block text-center md:leading-7 w-full bg-[#e87223] rounded-[5px] text-white text-base p-[15px]">
+              <button disabled = {isPending} type="submit" className="button inline-block text-center md:leading-7 w-full bg-[#e87223] rounded-[5px] text-white text-base p-[15px]">
                 Create New Password
               </button>
             </form>
