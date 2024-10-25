@@ -37,7 +37,7 @@ export const logoutAction = async () => {
 }
 
 export const getTokenCustom = async () => {
-    const cookiesOfNextAuth = cookies().get("authjs.session-token")
+    const cookiesOfNextAuth = cookies().get("__Secure-authjs.session-token")
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     return cookiesOfNextAuth?.value!
 }
