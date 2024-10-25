@@ -16,6 +16,7 @@ export default function Login() {
   const router = useRouter()
 
   useEffect(() => {
+    console.log('session: ', session);
     if (session) {
       router.push('/')  
     }
