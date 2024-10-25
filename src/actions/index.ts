@@ -11,12 +11,13 @@ import { cookies } from "next/headers"
 export const loginAction = async (payload: any) => {
     try {
         const res: any = await loginService(payload)
+        console.log('res: ', res);
         if (res.data.success) {
             await signIn('credentials', {
                 email: payload.email,
                 password: payload.password,
                 name: res?.data?.data.firstName + ' ' + res?.data?.data.lastName,
-                _id: res?.data?.data._id,
+                _id: res?.data?.data.id,
                 redirect: false,
             },
             )
