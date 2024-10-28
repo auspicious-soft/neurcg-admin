@@ -12,21 +12,13 @@ export default function page() {
   const [query, setQuery] = useState('')
   const { data, isLoading, error } = useSWR(`/admin/income?${query}`, getIncomeService, { revalidateOnFocus: false })
   const incomeData = data?.data
-
- if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <ReactLoading type={'spin'} color={'#e87223'} height={'40px'} width={'40px'} />
-      </div>
-    );
-  }
   return (
     <div>
       <div className='flex justify-end mb-5'>
         <SearchBar setQuery={setQuery} />
       </div>
       <div>
-        <IncomeTable incomeData = {incomeData} setQuery = {setQuery}/>
+        <IncomeTable incomeData = {incomeData} setQuery = {setQuery} isLoading = {isLoading}/>
       </div>
 
     </div>

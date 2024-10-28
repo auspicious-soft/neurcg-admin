@@ -5,7 +5,7 @@ import { NextLabel, PrevLabel } from '@/utils/svgIcons';
 import ReactLoading from 'react-loading';
 
 const UserTable = (props: any) => {
-  const { usersData , setQuery} = props;
+  const { usersData , setQuery, isLoading} = props;
   const total = usersData?.total ?? 0;
   const rowsPerPage = 10;
   const router = useRouter();
@@ -33,7 +33,8 @@ const UserTable = (props: any) => {
             </tr>
           </thead>
           <tbody>
-            {users.length > 0 ? (
+            {
+            users.length > 0 ? (
               users
                 .map((customer: any, index: number) => (
                   <tr key={customer._id} className={`${index % 2 === 0 ? 'bg--100' : 'bg-whi'}`}>
@@ -53,9 +54,11 @@ const UserTable = (props: any) => {
                 ))
             ) : (
               <tr className="w-full flex justify-center p-3 items-center">
-                <td colSpan={5}><ReactLoading type={'spin'} color={'#e87223'} height={'40px'} width={'40px'} /></td>
+                 {isLoading ?  <ReactLoading type={'spin'} color={'#e87223'} height={'40px'} width={'40px'} /> : 'No data found'}
               </tr>
-            )}
+            )
+            
+            }
           </tbody>
         </table>
       </div>

@@ -13,9 +13,7 @@ const SearchBar = (props: SearchBarProps) => {
 
     useEffect(() => {
         const handler = setTimeout(() => {
-            if (inputValue) {
-                setQuery(`description=${inputValue}`);
-            }
+            setQuery(`${inputValue ? 'description=' :''}${inputValue}`);
         }, 500);
 
         return () => {
@@ -25,12 +23,6 @@ const SearchBar = (props: SearchBarProps) => {
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(event.target.value);
-    };
-
-    const handleSearchClick = () => {
-        if (inputValue) {
-            setQuery(`description=${inputValue}`);
-        }
     };
 
     return (
@@ -46,13 +38,7 @@ const SearchBar = (props: SearchBarProps) => {
                     onChange={handleInputChange}
                 />
                 <span className='absolute left-7 top-[14px] '><SearchIcon /> </span>
-                <button
-                    type="button"
-                    className='bg-[#E87223] rounded-lg text-white px-5 text-sm h-[46px] ml-[-5px]'
-                    onClick={handleSearchClick}
-                >
-                    Go
-                </button>
+                <button className='bg-[#E87223] rounded-lg text-white px-5 text-sm h-[46px] ml-[-5px]'>Go</button>
             </label>
         </div>
     );

@@ -4,6 +4,7 @@ import { NextLabel, PrevLabel } from '@/utils/svgIcons';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
+import ReactLoading from 'react-loading';
 
 interface Income {
   _id: string;
@@ -20,10 +21,11 @@ interface IncomePageProps {
     limit: number
   }
   setQuery: React.Dispatch<React.SetStateAction<string>>
+  isLoading: boolean
 }
 
 const IncomeTable = (props: IncomePageProps) => {
-  const { incomeData, setQuery } = props;
+  const { incomeData, setQuery, isLoading} = props;
   const total = incomeData?.total ?? 0;
   const rowsPerPage = 10;
   const currentIncome = incomeData?.data ?? [];
@@ -57,7 +59,9 @@ const IncomeTable = (props: IncomePageProps) => {
               ))
             ) : (
               <tr>
-                <td className='w-full flex justify-center p-3 items-center' colSpan={4}>No data found</td>
+                <td className='w-full flex justify-center p-3 items-center' colSpan={4}>
+                  {isLoading ?  <ReactLoading type={'spin'} color={'#e87223'} height={'40px'} width={'40px'} /> : 'No data found'}
+                </td>
               </tr>
             )}
           </tbody>
