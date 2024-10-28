@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
 import Logo from "@/assets/images/logo.png";
 import { MenuIcon, ToggleClose } from "@/utils/svgIcons";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { logoutAction } from "@/actions";
 
 
