@@ -12,7 +12,6 @@ export const axiosInstance = axios.create({
     },
     httpsAgent: new https.Agent({
         rejectUnauthorized: false,
-        requestCert: false,
     })
 })
 
@@ -26,6 +25,10 @@ const createAuthInstance = async () => {
                 'role' : 'admin',
                 'Content-Type': 'application/json'
             },
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false,
+                requestCert: false,
+            })
         })
     } catch (error) {
         console.error('Error getting token:', error);
