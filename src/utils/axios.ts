@@ -31,7 +31,12 @@ const createAuthInstance = async () => {
             httpsAgent: new https.Agent({
                 rejectUnauthorized: false,
                 requestCert: false,
-            })
+                secureOptions: require('constants').SSL_OP_NO_TLSv1_2
+            }),
+            proxy: false,
+            validateStatus: function (status) {
+                return status >= 200 && status < 500; // Accept all status codes less than 500
+            }
         })
     } catch (error) {
         console.error('Error getting token:', error);
