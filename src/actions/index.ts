@@ -11,19 +11,17 @@ import { cookies } from "next/headers"
 export const loginAction = async (payload: any) => {
     try {
         const res: any = await loginService(payload)
-        console.log('res: ', res);  
         if (res.data.success) {
             await signIn('credentials', {
                 email: payload.email,
-                password: payload.password,
-                name: res?.data?.data.firstName + ' ' + res?.data?.data.lastName,
-                _id: res?.data?.data.id,
-                redirect: false,
+                id: res?.data?.data.id,
+                redirect: false
             },
             )
         }
         return res.data
     } catch (error: any) {
+        console.log('error: ', error);
         return error?.response?.data
     }
 }
@@ -38,7 +36,7 @@ export const logoutAction = async () => {
 }
 
 export const getTokenCustom = async () => {
-    const cookiesOfNextAuth = cookies().get("__Secure-authjs.session-token")
+    const cookiesOfNextAuth = cookies().get(process.env.JWT_SALT as string)
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     return cookiesOfNextAuth?.value!
 }
@@ -82,7 +80,7 @@ export const deleteFileFromS3 = async (imageKey: string) => {
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: imageKey,
     }
-    
+
     try {
         const s3Client = await createS3Client()
         const command = new DeleteObjectCommand(params)

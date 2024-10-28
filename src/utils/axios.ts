@@ -1,12 +1,16 @@
 import axios from "axios";
 import { getTokenCustom } from "@/actions";
+import https from "https";
 
 export const axiosInstance = axios.create({
     baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`,
     headers: {
         'Content-Type': 'application/json',
         'role' : 'admin'
-    }
+    },
+    httpsAgent: new https.Agent({
+        rejectUnauthorized: false,
+    })
 })
 
 const createAuthInstance = async () => {

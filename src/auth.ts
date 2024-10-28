@@ -14,8 +14,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (credentials.email) {
           return {
             email: credentials.email,
-            name: credentials.name,
-            id: credentials._id,
+            id: credentials.id,
           }
         }
         else {
