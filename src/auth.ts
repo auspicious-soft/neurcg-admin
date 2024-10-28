@@ -47,17 +47,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60,
   },
-  cookies: {
-    sessionToken: {
-      name: `__Secure-authjs.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: true
-      }
-    },
-  },
+  // cookies: {
+  //   sessionToken: {
+  //     name: `__Secure-authjs.session-token`,
+  //     options: {
+  //       httpOnly: true,
+  //       sameSite: 'lax',
+  //       path: '/',
+  //       secure: true
+  //     }
+  //   },
+  // },
   trustHost: true,
   redirectProxyUrl : process.env.AUTH_REDIRECT_PROXY_URL
 })
