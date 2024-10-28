@@ -6,7 +6,7 @@ import Logo from "@/assets/images/logo.png";
 import { useState } from "react";
 import { MenuIcon, ToggleClose } from "@/utils/svgIcons"
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut } from "@/auth"
 interface HeaderProps {
   notificationsCount: number;
   userImage: string | StaticImageData;
@@ -74,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({
                 <span className="text-[#3A2C23] text-base ">My Profile</span>
               </Link> */}
               <div>
-              <a onClick={() => signOut({ redirectTo: '/login' })} > 
+              <a onClick={async() => await signOut({ redirect: true, redirectTo: "/login" })} > 
                 <span className="text-[#e87223] text-base cursor-pointer font-bold flex items-center justify-center" >Log Out</span>
               </a>
               </div>
