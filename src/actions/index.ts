@@ -7,6 +7,7 @@ import { loginService } from "@/service/admin-service"
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 
 export const loginAction = async (payload: any) => {
     try {
@@ -29,14 +30,9 @@ export const loginAction = async (payload: any) => {
 
 export const logoutAction = async () => {
     try {
-        const signOutResult = await signOut({ redirect: false, redirectTo: '/login' });
+        await signOut({ redirect: false, redirectTo: '/login' });
         cookies().set('__Secure-authjs.callback-url', '', { expires: new Date(0), path: '/', sameSite: 'lax', secure: true });
-
-        // Handle the URL returned by signOut if needed
-        if (signOutResult?.url) {
-            // Perform any additional actions with the URL if necessary
-            console.log('Sign out URL:', signOutResult.url);
-        }
+        redirect('/login')
     } catch (error: any) {
         return error?.response?.data;
     }
