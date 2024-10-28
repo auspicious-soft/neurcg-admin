@@ -5,7 +5,8 @@ import Image, { StaticImageData } from "next/image";
 import Logo from "@/assets/images/logo.png";
 import { MenuIcon, ToggleClose } from "@/utils/svgIcons";
 import { usePathname, useRouter } from "next/navigation";
-import { signOut } from "next-auth/react"; // Change this import
+import { logoutAction } from "@/actions";
+
 
 interface HeaderProps {
   notificationsCount: number;
@@ -35,15 +36,8 @@ const Header: React.FC<HeaderProps> = ({
   const currentPageName = pageNames[pathname] || "Users";
 
   const handleSignOut = async () => {
-    try {
-      await signOut({
-        redirect: true,
-        redirectTo: "/login" // Note: changed from redirectTo to callbackUrl
-      });
-    } catch (error) {
-      console.error("Sign out error:", error);
-      router.push('/login');
-    }
+    await logoutAction();
+    router.push("/login");
   };
 
   return (
