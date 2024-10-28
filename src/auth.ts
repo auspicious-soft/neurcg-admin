@@ -45,4 +45,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: 'jwt'
   },
   trustHost: true,
+  // redirectProxyUrl : process.env.NEXTAUTH_URL
 })

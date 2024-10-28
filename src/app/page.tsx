@@ -17,8 +17,7 @@ import { getDashboardStatsService } from "@/service/admin-service";
 
 export default function Home() {
   const session = useSession()
-  const [incomeData, setIncomeData] = useState()
-  const [userGrowthData, setUserGrowthData] = useState()
+  
   useEffect(() => {
     if (!session.data) redirect('/login')
   }, [session])
