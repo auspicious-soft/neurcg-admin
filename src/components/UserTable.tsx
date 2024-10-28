@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import ReactPaginate from 'react-paginate';
 import { NextLabel, PrevLabel } from '@/utils/svgIcons';
+import ReactLoading from 'react-loading';
 
 const UserTable = (props: any) => {
   const { usersData , setQuery} = props;
@@ -52,7 +53,7 @@ const UserTable = (props: any) => {
                 ))
             ) : (
               <tr className="w-full flex justify-center p-3 items-center">
-                <td colSpan={5}>No data found</td>
+                <td colSpan={5}><ReactLoading type={'spin'} color={'#e87223'} height={'40px'} width={'40px'} /></td>
               </tr>
             )}
           </tbody>
