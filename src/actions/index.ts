@@ -30,6 +30,7 @@ export const loginAction = async (payload: any) => {
 export const logoutAction = async () => {
     try {
         await signOut()
+        cookies().set('__Secure-authjs.callback-url', '', { expires: new Date(0), path: '/', sameSite: 'lax', secure: true });
     } catch (error: any) {
         return error?.response?.data
     }
