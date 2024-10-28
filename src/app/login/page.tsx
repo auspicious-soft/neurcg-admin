@@ -14,6 +14,7 @@ import { loginAction } from "@/actions";
 
 export default function Login() {
   const { data: session } = useSession();
+  console.log('session: ', session);
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
