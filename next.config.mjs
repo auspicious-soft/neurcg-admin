@@ -20,6 +20,19 @@ const nextConfig = {
       },
     ],
   },
+  
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+          ...config.resolve.fallback,
+          net: false,
+          tls: false,
+          fs: false,
+          https: false
+      };
+  }
+  return config;
+  },
 };
 
 export default nextConfig;
