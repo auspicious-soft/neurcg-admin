@@ -11,7 +11,7 @@ export const axiosInstance = axios.create({
         'Content-Type': 'application/json',
         'role' : 'admin' 
     },
-    httpsAgent: new https.Agent({
+    httpsAgent: new https.Agent({ 
         rejectUnauthorized: false,
         requestCert: false,
         secureOptions: require('constants').SSL_OP_NO_TLSv1_2
