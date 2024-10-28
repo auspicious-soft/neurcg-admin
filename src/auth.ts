@@ -27,12 +27,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     jwt({ token, user}) {
       if (user) {
         token.id = user.id
+        token.email = user.email
       }
       return token
     },
     session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string
+        session.user.email = token.email as string
       }
       return session
     },
@@ -42,7 +44,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: '/login'
   },
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60,
+  },
+  cookies: {
+    sessionToken: {
+      name: `__Secure-authjs.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: true
+      }
+    },
   },
   trustHost: true,
   redirectProxyUrl : process.env.AUTH_REDIRECT_PROXY_URL
