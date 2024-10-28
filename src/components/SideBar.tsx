@@ -37,7 +37,7 @@ const SideBar = ({ isOpen, toggleSidebar }: SideBarProps) => {
     <div className="side-bar z-2 relative overflo-custom h-[100%] overflow-y-scroll flex lg:flex-col justify-between">
 
       {/* Sidebar */}
-      <div className={`fixed z-[3] flex flex-col justify-between overflo-custom  overflow-y-scroll lg:relative top-0 left-0 w-[2  px] h-full bg-white transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+      <div className={`fixed z-[3] flex flex-col justify-between overflo-custom  overflow-y-scroll lg:relative top-0 left-0 w-[280px] h-full bg-white transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
         <div className="pl-[30px] pt-[60px] md:pt-[38px] ">
           <ul className="navList">
             <li className={isActive('/')}>
