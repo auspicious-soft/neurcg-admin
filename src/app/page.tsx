@@ -3,17 +3,13 @@
 import IncomeGraph from "@/components/IncomeGraph";
 import UserCards from "@/components/UserCards";
 import UsersGraph from "@/components/UsersGraph";
-import React, { useEffect, useState } from "react";
-import thumbimg1 from "@/assets/images/video1.png"
-import thumbimg2 from "@/assets/images/video2.png"
-import thumbimg3 from "@/assets/images/video3.png"
-import thumbimg4 from "@/assets/images/video4.png"
+import React, { useEffect } from "react";
 import NewUserCard from "@/components/NewUserCard";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import useSWR from "swr";
 import { getDashboardStatsService } from "@/service/admin-service";
-
+import ReactLoading from 'react-loading';
 
 export default function Home() {
   const session = useSession()
@@ -22,7 +18,6 @@ export default function Home() {
     if (!session.data) redirect('/login')
   }, [session])
 
- 
   const { data, isLoading, error } = useSWR('/admin/dashboard', getDashboardStatsService)
   const incomeThisMonth = data?.data?.data?.incomeThisMonth as number
   const UserData = data?.data?.data?.newUsersData
@@ -48,6 +43,15 @@ export default function Home() {
       value: data?.data?.data?.totalUsers as number,
     },
   ]
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <ReactLoading type={'spin'} color={'#26395e'} height={'20px'} width={'20px'} />
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="grid md:grid-cols-[minmax(0,_5fr)_minmax(0,_7fr)] gap-5 ">
@@ -63,7 +67,6 @@ export default function Home() {
               text={data.text}
             />
           ))}
-
         </div>
       </section>
       <section>
@@ -84,7 +87,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
     </div>
   );
 }
