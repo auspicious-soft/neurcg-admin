@@ -29,13 +29,18 @@ export const loginAction = async (payload: any) => {
 
 export const logoutAction = async () => {
     try {
-        await signOut()
+        const signOutResult = await signOut({ redirect: false, redirectTo: '/login' });
         cookies().set('__Secure-authjs.callback-url', '', { expires: new Date(0), path: '/', sameSite: 'lax', secure: true });
+
+        // Handle the URL returned by signOut if needed
+        if (signOutResult?.url) {
+            // Perform any additional actions with the URL if necessary
+            console.log('Sign out URL:', signOutResult.url);
+        }
     } catch (error: any) {
-        return error?.response?.data
+        return error?.response?.data;
     }
 }
-
 export const getTokenCustom = async () => {
     const cookiesOfNextAuth = cookies().get(process.env.JWT_SALT as string)
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain

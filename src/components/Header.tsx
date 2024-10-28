@@ -22,7 +22,6 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const [showData, setShowData] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
 
   const pageNames: { [key: string]: string } = {
     "/": "Home",
@@ -37,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({
 
   const handleSignOut = async () => {
     await logoutAction();
-    router.push("/login");
+    // router.push("/login");
   };
 
   return (
