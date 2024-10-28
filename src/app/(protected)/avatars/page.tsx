@@ -170,10 +170,10 @@ const AvatarSection = () => {
         });
 
         const imageKey = `avatars/${filename}`;
-        let avatarUrl = await generateSignedUrlToGet(imageKey);
-        if (avatarUrl) {
-          avatarUrl = avatarUrl.replace(process.env.NEXT_PUBLIC_AWS_BUCKET_PATH as string, '');
-        }
+        const avatarUrl = imageKey;
+        // if (avatarUrl) {
+          // avatarUrl = avatarUrl.replace(process.env.NEXT_PUBLIC_AWS_BUCKET_PATH as string, '');
+        // }
 
         // Save to backend
         await addAvatarService('/admin/avatars', { avatarUrl, name: filename });
