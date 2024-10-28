@@ -2,6 +2,8 @@ import axios from "axios";
 import { getTokenCustom } from "@/actions";
 import https from "https";
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 export const axiosInstance = axios.create({
     baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`,
     headers: {
