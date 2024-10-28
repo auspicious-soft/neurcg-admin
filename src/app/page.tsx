@@ -47,7 +47,7 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <ReactLoading type={'spin'} color={'#26395e'} height={'20px'} width={'20px'} />
+        <ReactLoading type={'spin'} color={'#e87223'} height={'40px'} width={'40px'} />
       </div>
     );
   }

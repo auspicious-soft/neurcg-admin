@@ -6,11 +6,20 @@ import SearchBar from '@/components/SearchBar'
 import React, { useState } from 'react'
 import useSWR from 'swr'
 import { getIncomeService } from '@/service/admin-service';
+import ReactLoading from 'react-loading';
 
 export default function page() {
   const [query, setQuery] = useState('')
   const { data, isLoading, error } = useSWR(`/admin/income?${query}`, getIncomeService, { revalidateOnFocus: false })
   const incomeData = data?.data
+
+ if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <ReactLoading type={'spin'} color={'#e87223'} height={'40px'} width={'40px'} />
+      </div>
+    );
+  }
   return (
     <div>
       <div className='flex justify-end mb-5'>

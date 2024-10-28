@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { deleteFileFromS3, generateSignedUrlToGet, generateSignedUrlToUploadOn } from "@/actions";
 import Image from "next/image";
 import { getImageUrl } from "@/utils";
+import ReactLoading from 'react-loading';
 
 
 const createImage = (url: string): Promise<HTMLImageElement> =>
@@ -178,7 +179,7 @@ const AvatarSection = () => {
         await addAvatarService('/admin/avatars', { avatarUrl, name: filename });
         toast.success('Avatar uploaded successfully');
         setIsModalOpen(false);
-        
+
         // Cleanup
         if (selectedFile.preview) {
           URL.revokeObjectURL(selectedFile.preview);
@@ -236,8 +237,8 @@ const AvatarSection = () => {
                 className="justify-center bg-[#E87223] text-white text-xs flex items-center gap-2.5 py-1 px-3 rounded opacity-0 group-hover:opacity-100 transition-opacity"
                 onClick={() => {
                   setDeleteAvatarId({
-                     avatarIdInDb : avatar._id,
-                     name: avatar.name
+                    avatarIdInDb: avatar._id,
+                    name: avatar.name
                   });
                   setIsDeleteOpen(true);
                 }}
@@ -249,7 +250,7 @@ const AvatarSection = () => {
           </div>
         )) : (
           <div className="flex justify-center items-center col-span-6 h-[300px]">
-            <span className="text-lg">Loading...</span>
+            <ReactLoading type={'spin'} color={'#e87223'} height={'40px'} width={'40px'} />
           </div>
         )}
       </div>
