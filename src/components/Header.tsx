@@ -22,7 +22,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const [showData, setShowData] = useState(false);
   const pathname = usePathname();
-  const router = useRouter()
+  // const router = useRouter()
   const pageNames: { [key: string]: string } = {
     "/": "Home",
     "/income": "Income",
