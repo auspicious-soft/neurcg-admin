@@ -7,7 +7,6 @@ import { loginService } from "@/service/admin-service"
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { cookies } from "next/headers"
-import { redirect } from "next/navigation"
 
 export const loginAction = async (payload: any) => {
     try {
@@ -30,9 +29,8 @@ export const loginAction = async (payload: any) => {
 
 export const logoutAction = async () => {
     try {
-        await signOut({ redirect: true, redirectTo: '/login' });
+        await signOut();
         cookies().set(process.env.JWT_SALT as string, '', { expires: new Date(0), path: '/', sameSite: 'lax', secure: true });
-        redirect('/login')
     } catch (error: any) {
         return error?.response?.data;
     }

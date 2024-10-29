@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
 import Logo from "@/assets/images/logo.png";
 import { MenuIcon, ToggleClose } from "@/utils/svgIcons";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { logoutAction } from "@/actions";
 
 
@@ -22,7 +22,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const [showData, setShowData] = useState(false);
   const pathname = usePathname();
-
+  const router = useRouter()
   const pageNames: { [key: string]: string } = {
     "/": "Home",
     "/income": "Income",
@@ -36,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({
 
   const handleSignOut = async () => {
     await logoutAction();
-    // router.push("/login");
+    router.push("/login");
   };
 
   return (
