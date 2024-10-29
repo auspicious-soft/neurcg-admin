@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server'
 
-import { signIn } from "@/auth"
+import { signIn, signOut } from "@/auth"
 import { createS3Client } from "@/config/s3"
 import { loginService } from "@/service/admin-service"
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
@@ -30,7 +30,7 @@ export const loginAction = async (payload: any) => {
 
 export const logoutAction = async () => {
     try {
-        // await signOut({ redirect: false, redirectTo: '/login' });
+        await signOut({ redirect: true, redirectTo: '/login' });
         cookies().set(process.env.JWT_SALT as string, '', { expires: new Date(0), path: '/', sameSite: 'lax', secure: true });
         redirect('/login')
     } catch (error: any) {
