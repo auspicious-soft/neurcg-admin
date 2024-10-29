@@ -36,7 +36,6 @@ const Header: React.FC<HeaderProps> = ({
 
   const handleSignOut = async () => {
     const res = await logoutAction();
-    console.log('res: ', res);
     if (res === true) {
       window.location.reload()
     }
