@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server'
 
-import { signIn, signOut } from "@/auth"
+import { signIn } from "@/auth"
 import { createS3Client } from "@/config/s3"
 import { loginService } from "@/service/admin-service"
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
