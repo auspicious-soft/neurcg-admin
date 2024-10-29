@@ -38,7 +38,7 @@ const Header: React.FC<HeaderProps> = ({
     const res = await logoutAction();
     console.log('res: ', res);
     if (res === true) {
-      router.push('/login')
+      window.location.reload()
     }
   };
 
