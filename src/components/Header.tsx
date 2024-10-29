@@ -35,8 +35,11 @@ const Header: React.FC<HeaderProps> = ({
   const currentPageName = pageNames[pathname] || "Users";
 
   const handleSignOut = async () => {
-    await logoutAction();
-    router.push("/login");
+    const res = await logoutAction();
+    console.log('res: ', res);
+    if (res === true) {
+      router.push('/login')
+    }
   };
 
   return (

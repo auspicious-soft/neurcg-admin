@@ -30,7 +30,8 @@ export const loginAction = async (payload: any) => {
 export const logoutAction = async () => {
     try {
         await signOut();
-        cookies().set(process.env.JWT_SALT as string, '', { expires: new Date(0), path: '/', sameSite: 'lax', secure: true });
+        cookies().set(process.env.JWT_SALT as string, '', { expires: new Date(0), path: '/', sameSite: 'lax', secure: true })
+        return true
     } catch (error: any) {
         return error?.response?.data;
     }
