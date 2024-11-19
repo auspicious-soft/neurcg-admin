@@ -13,7 +13,6 @@ import ReactLoading from 'react-loading';
 
 export default function Home() {
   const session = useSession()
-  
   useEffect(() => {
     if (!session.data) redirect('/login')
   }, [session])
@@ -56,7 +55,7 @@ export default function Home() {
     <div>
       <div className="grid md:grid-cols-[minmax(0,_5fr)_minmax(0,_7fr)] gap-5 ">
         <IncomeGraph incomeThisMonth={incomeThisMonth} incomeData={data?.data?.data?.incomeData} />
-        <UsersGraph userData = {data?.data?.data?.usersGrowth}/>
+        <UsersGraph userData={data?.data?.data?.usersGrowth} />
       </div>
       <section className="my-5 md:my-10">
         <div className="grid  md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
@@ -70,14 +69,14 @@ export default function Home() {
         </div>
       </section>
       <section>
-        <h2 className="section-title mb-5">New Users</h2>
+        {UserData.length > 0 && <h2 className="section-title mb-5">New Users</h2>}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
           {UserData?.map((data: {
-              _id: string;
-              firstName: string;
-              lastName: string;
-              email: string;
-              profilePic: string;
+            _id: string;
+            firstName: string;
+            lastName: string;
+            email: string;
+            profilePic: string;
           }) => (
             <NewUserCard
               key={data._id}
