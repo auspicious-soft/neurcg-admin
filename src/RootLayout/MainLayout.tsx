@@ -19,7 +19,6 @@ export default function MainLayout({
 
     return (
         <div>
-            <div>
                 {!hideHeader.includes(pathname) &&
                     <Header
                         userImage={dp}
@@ -28,13 +27,11 @@ export default function MainLayout({
                         isOpen={isSidebarOpen}
                     />
                 }
-            </div>
-            <div className="layout">
-                {!hideSideBar.includes(pathname) && <div className="layout-left">
-                    <SideBar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+            <div className="main-wrapper flex h-[calc(100vh-104px)] md:h-[calc(100vh-110px)] flex-col lg:flex-row lg:overflow-hidden">
+            <div className="side-bar-layout flex-none"> 
+            {!hideSideBar.includes(pathname) &&  <SideBar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />}
                 </div>
-                }
-                <main className="layout-right overflo-custom ">
+                <main className="main-layout flex-grow bg-[#F5F7FA] p-5 md:px-[35px] md:py-[40px] overflo-custom overflow-y-auto">
                     {children}
                 </main>
             </div>
