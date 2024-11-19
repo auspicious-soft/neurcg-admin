@@ -69,7 +69,7 @@ export default function Home() {
         </div>
       </section>
       <section>
-        {UserData.length > 0 && <h2 className="section-title mb-5">New Users</h2>}
+        {UserData?.length > 0 && <h2 className="section-title mb-5">New Users</h2>}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
           {UserData?.map((data: {
             _id: string;
