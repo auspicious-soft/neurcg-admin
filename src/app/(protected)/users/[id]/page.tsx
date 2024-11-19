@@ -62,7 +62,6 @@ const ProfilePage = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { id } = useParams();
   const { data, isLoading, error } = useSWR(`/admin/users/${id}`, getASingleUserService)
-  console.log('data: ', data);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -79,7 +78,6 @@ const ProfilePage = () => {
     }
   };
   const projectsData = data?.data?.data?.projects
-  console.log('projectsData: ', projectsData);
 
   return (
     <div className="">
@@ -110,7 +108,7 @@ const ProfilePage = () => {
               <div className="grid place-items-center h-full w-full">
                 <div>
                   <Image
-                    src={previmg2}
+                    src={getImageUrl(data?.data?.data?.user?.profilePic)}
                     alt="upload"
                     width={177}
                     height={177}
@@ -122,26 +120,26 @@ const ProfilePage = () => {
           </div>
         </div>
         <div className=' mt-[30px] '>
-          <h1 className='text-xl md:text-[28px] text-[#3A2C23] font-semibold mb-[15px]'>Marisa Love</h1>
+          <h1 className='text-xl md:text-[28px] text-[#3A2C23] font-semibold mb-[15px]'>{data?.data?.data?.user?.firstName} {data?.data?.data?.user?.lastName}</h1>
           <div className='main-wrap flex justify-between items-center mb-3'>
             <p className='title'>Email Address</p>
             <p className='values'>{data?.data?.data?.user?.email}</p>
           </div>
           <div className='main-wrap flex justify-between items-center mb-3'>
             <p className='title'>Date Of Birth</p>
-            <p className='values'>{data?.data?.data?.user?.dob}</p>
+            <p className='values'>{new Date(data?.data?.data?.user?.dob).toLocaleDateString()}</p>
           </div>
           <div className='main-wrap flex justify-between items-center mb-3'>
             <p className='title'>Phone Number</p>
-            <p className='values'>+1 545 458 5236</p>
+            <p className='values'>{data?.data?.data?.user?.phoneNumber ?? 'N/A'}</p>
           </div>
           <div className='main-wrap flex justify-between items-center mb-3'>
             <p className='title'>Home Address</p>
-            <p className='values'>1024, lorents road</p>
+            <p className='values'>{data?.data?.data?.user?.homeAddress}</p>
           </div>
           <div className='main-wrap flex justify-between items-center '>
             <p className='title'>City And State</p>
-            <p className='values'>Arizona, US</p>
+            <p className='values'>{data?.data?.data?.user?.city ?? 'N/A'}, {data?.data?.data?.user?.state ?? 'N/A'}</p>
           </div>
         </div>
       </div>

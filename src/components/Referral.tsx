@@ -30,12 +30,12 @@ const Referral = (props: any) => {
             </div>
             <div className='refer-wrap flex justify-between items-center mb-[5px]'>
                 <h2 className='text'>Referal bonus points</h2>
-                <h3 className='rounded-[50px] text-[#3A2C23] text-sm text-center py-[5px] w-[54px] border border-[#FFE2CE] bg-[#FFEEE2]'>{data?.referralBonusPoints}</h3>
+                <h3 className='rounded-[50px] text-[#3A2C23] text-sm text-center py-[5px] w-[54px] border border-[#FFE2CE] bg-[#FFEEE2]'>{data?.referredCount * 10}</h3>
             </div>
-            <div className='refer-wrap flex justify-between items-center '>
+            {/* <div className='refer-wrap flex justify-between items-center '>
                 <h2 className='text'>Earned €</h2>
                 <h3 className='rounded-[50px] text-[#3A2C23] text-sm text-center py-[5px] w-[54px] border border-[#FFE2CE] bg-[#FFEEE2]'>{data?.referralEarnings}</h3>
-            </div>
+            </div> */}
             <div>
                 <h3 className='text-base text-[#3A2C23] font-semibold mt-[18px] mb-5'>Referral Link</h3>
                 <p
