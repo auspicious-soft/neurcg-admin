@@ -16,6 +16,7 @@ export default function MainLayout({
     const hideHeader = ['/signup', , '/login', '/forgotpassword', '/otp', '/newpassword'];
     const pathname = usePathname();
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+    const isAuthPage = hideSideBar.includes(pathname) || hideHeader.includes(pathname);
 
     return (
         <div>
@@ -31,7 +32,9 @@ export default function MainLayout({
             <div className="side-bar-layout flex-none"> 
             {!hideSideBar.includes(pathname) &&  <SideBar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />}
                 </div>
-                <main className="main-layout flex-grow bg-[#F5F7FA] p-5 md:px-[35px] md:py-[40px] overflo-custom overflow-y-auto">
+                <main 
+                 className={`flex-grow ${isAuthPage ? 'p-0 h-[100vh] auth-page-styles' : 'bg-[#F5F7FA] p-5 md:px-[35px] md:py-[40px] overflo-custom overflow-y-auto'}`}
+                >
                     {children}
                 </main>
             </div>
