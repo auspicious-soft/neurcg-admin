@@ -48,7 +48,7 @@ const SideBar = ({ isOpen, toggleSidebar }: SideBarProps) => {
                 <span>Home</span>
               </Link>
             </li>
-            <li className={isActive('/users')}>
+            <li className={`${isActive('/users')} ${pathname.includes('/users') ? 'active' : ''}`}>
               <Link href="/users"  onClick={handleLinkClick}>
                 <ProfileIcon />
                 <span>Users</span>

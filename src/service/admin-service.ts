@@ -2,7 +2,7 @@
 import { getAxiosInstance } from "@/utils/axios";
 import { axiosInstance } from "@/utils/axios"
 
-export const loginService = async (payload: any) =>  await axiosInstance.post(`/admin/login`, payload)
+export const loginService = async (payload: any) => await axiosInstance.post(`/admin/login`, payload)
 export const forgotPasswordEmailSentService = async (payload: any) => await axiosInstance.patch(`/admin/forgot-password`, payload)
 export const sendOtpService = async (payload: any) => await axiosInstance.post(`/admin/verify-otp`, payload)
 export const updatePasswordServiceAfterOtpVerified = async (payload: any) => await axiosInstance.patch(`/admin/new-password-otp-verified`, payload)
@@ -23,6 +23,11 @@ export const getASingleUserService = async (route: string) => {
     return axiosInstance.get(route)
 }
 
+export const addCreditsService = async (route: string, payload: any) => {
+    const axiosInstance = await getAxiosInstance()
+    return axiosInstance.post(route, payload)
+}
+
 export const getIncomeService = async (routeWithQuery: string) => {
     const axiosInstance = await getAxiosInstance()
     return axiosInstance.get(routeWithQuery)
@@ -39,7 +44,7 @@ export const sendNotificationToAllService = async (payload: any) => {
     return axiosInstance.post('/admin/send-notification', payload)
 }
 
-export const sendNotificationToSpecificUsers = async(payload: any) => {
+export const sendNotificationToSpecificUsers = async (payload: any) => {
     const axiosInstance = await getAxiosInstance()
     return axiosInstance.post('/admin/send-notification-to-specific-users', payload)
 }

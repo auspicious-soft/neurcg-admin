@@ -1,97 +1,69 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { EditImgIcon } from '@/utils/svgIcons';
-import previmg2 from "@/assets/images/previmg.png"
-// import CreditScore from '@/components/CreditScore';
+import ReactLoading from 'react-loading';
 import AvatarsCreated from '@/components/AvatarsCreated';
 import Referral from '@/components/Referral';
-import thumbimg1 from "@/assets/images/video1.png"
-import thumbimg2 from "@/assets/images/video2.png"
-import thumbimg3 from "@/assets/images/video3.png"
-import thumbimg4 from "@/assets/images/video4.png"
 import NeurcgCard from '@/components/NeurcgCard';
 import useSWR from 'swr';
-import { getASingleUserService } from '@/service/admin-service';
+import { addCreditsService, getASingleUserService } from '@/service/admin-service';
 import { getImageUrl } from '@/utils';
+import Link from 'next/link';
+import { toast } from 'sonner';
 
-// const CreditScores =[
-//   {
-//     id: 1,
-//     text: "Animation Credit Left",
-//     value: 148,
-//   },
-//   {
-//       id: 2,
-//       text: "Audio Upload Credit Left",
-//       value: 48,
-//     },
-//     {
-//       id: 3,
-//       text: "Avatar Creation Credit Left",
-//       value: 18,
-//     },
-// ] 
-const VideoData = [
-  {
-    id: 1,
-    title: "Lorem Ipsum Dummy Title",
-    thumbnail: thumbimg1,
-    url: "https://youtu.be/K4TOrB7at0Y?si=zFMHw8k0jDjXiGMi"
-  },
-  {
-    id: 2,
-    title: "Lorem Ipsum Dummy Title",
-    thumbnail: thumbimg2,
-  },
-  {
-    id: 3,
-    title: "Lorem Ipsum Dummy Title",
-    thumbnail: thumbimg3
-  },
-  {
-    id: 4,
-    title: "Lorem Ipsum Dummy Title",
-    thumbnail: thumbimg4
-  },
-]
 const ProfilePage = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const { id } = useParams();
+  const { id } = useParams()
+  const [isPending, startTransition] = useTransition()
   const { data, isLoading, error } = useSWR(`/admin/users/${id}`, getASingleUserService)
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setImagePreview(result);
-        // setFormData((prevData) => ({
-        //   ...prevData,
-        //   image: result,
-        // }));
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  };
+  const [credits, setCredits] = useState<any>()
   const projectsData = data?.data?.data?.projects
 
+  const handleCreditsChange = (e: any) => {
+    setCredits(e.target.value)
+  }
+  const handleAddCredits = () => {
+    if (credits <= 0) {
+      return toast.warning('Please enter a valid amount')
+    }
+    if (credits > 200) {
+      return toast.warning('You can only add a maximum of 200 credits at a time')
+    }
+    startTransition(async () => {
+      try {
+        const res = await addCreditsService(`/admin/users/add-credit/${id}`, { amount: credits })
+        if (res.status == 200) {
+          setCredits('')
+          toast.success('Credits added successfully', { position: 'top-right' })
+        }
+      } catch (error) {
+        toast.error('An error occurred adding credits')
+      }
+    })
+  }
   return (
     <div className="">
+      <Link href={'/users'} className='cursor-pointer p-4 mb-4'>
+        &larr;   Back
+      </Link>
       <h1 className="text-2xl font-bold mb-4 hidden">Customer Profile: {id}</h1>
 
       {/* Add more profile information here */}
-      <div className="bg-white rounded-[8px] p-5 md:px-[52px] md:py-[45px]">
+      <div className="bg-white rounded-[8px] p-5 md:px-[52px] md:py-[45px] ">
         <div className="flex md:flex-row flex-col gap-y-4 justify-between md:items-center mb:mb-10">
           <div className="custom relative w-[177px] min-w-[177px] h-[177px] ">
             <input
               className="absolute top-0 left-0 h-full w-full opacity-0 p-0 cursor-pointer"
               type="file"
+              disabled
+              onChange={(Event) => {
+                Event.preventDefault();
+              }}
               accept="image/*"
-              onChange={handleImageChange}
+            // onChange={handleImageChange}
             />
             {imagePreview ? (
               <div className="relative h-full">
@@ -109,7 +81,7 @@ const ProfilePage = () => {
                 <div>
                   <Image
                     src={getImageUrl(data?.data?.data?.user?.profilePic)}
-                    alt="upload"
+                    alt="No image uploaded yet"
                     width={177}
                     height={177}
                     className="rounded-full"
@@ -118,47 +90,68 @@ const ProfilePage = () => {
               </div>
             )}
           </div>
+          <div className='flex justify-center items-center mt-5 gap-2'>
+            <input type="number" value={credits} onChange={handleCreditsChange} className='bg-white text-black rounded-lg px-4 py-2 w-full' placeholder='Enter the amount of credits' />
+            <button onClick={handleAddCredits} className='bg-[#E87223] text-white rounded w-40 p-3 max-w-40'>
+              {!isPending ? 'Add Credits' : '...'}
+            </button>
+          </div>
         </div>
         <div className=' mt-[30px] '>
           <h1 className='text-xl md:text-[28px] text-[#3A2C23] font-semibold mb-[15px]'>{data?.data?.data?.user?.firstName} {data?.data?.data?.user?.lastName}</h1>
           <div className='main-wrap flex justify-between items-center mb-3'>
             <p className='title'>Email Address</p>
-            <p className='values'>{data?.data?.data?.user?.email}</p>
-          </div>
+            {!isLoading ? <p className='values'>{data?.data?.data?.user?.email}</p> : <ReactLoading type={'cylon'} color={'#e87223'} height={'40px'} width={'40px'} />}          </div>
           <div className='main-wrap flex justify-between items-center mb-3'>
             <p className='title'>Date Of Birth</p>
-            <p className='values'>{new Date(data?.data?.data?.user?.dob).toLocaleDateString()}</p>
+            {!isLoading ? <p className='values'>{new Date(data?.data?.data?.user?.dob).toLocaleDateString()}</p> : <ReactLoading type={'cylon'} color={'#e87223'} height={'40px'} width={'40px'} />}
           </div>
           <div className='main-wrap flex justify-between items-center mb-3'>
             <p className='title'>Phone Number</p>
-            <p className='values'>{data?.data?.data?.user?.phoneNumber ?? 'N/A'}</p>
+            {!isLoading ? <p className='values'>{data?.data?.data?.user?.phoneNumber ?? 'N/A'}</p> : <ReactLoading type={'cylon'} color={'#e87223'} height={'40px'} width={'40px'} />}
           </div>
           <div className='main-wrap flex justify-between items-center mb-3'>
             <p className='title'>Home Address</p>
-            <p className='values'>{data?.data?.data?.user?.homeAddress}</p>
+            {!isLoading ? <p className='values'>{data?.data?.data?.user?.homeAddress}</p> : <ReactLoading type={'cylon'} color={'#e87223'} height={'40px'} width={'40px'} />}
           </div>
           <div className='main-wrap flex justify-between items-center '>
             <p className='title'>City And State</p>
-            <p className='values'>{data?.data?.data?.user?.city ?? 'N/A'}, {data?.data?.data?.user?.state ?? 'N/A'}</p>
-          </div>
+            {!isLoading ? <p className='values'>{data?.data?.data?.user?.city ?? 'N/A'}, {data?.data?.data?.user?.state ?? 'N/A'}</p> : <ReactLoading type={'cylon'} color={'#e87223'} height={'40px'} width={'40px'} />}          </div>
         </div>
       </div>
       <div className='grid gap-5 md:grid-cols-2 my-5 md:my-[50px] '>
-        <AvatarsCreated data={data?.data?.data?.avatarsUsed} />
-        <Referral data={data?.data?.data?.user} />
+        {!isLoading ? <AvatarsCreated data={data?.data?.data?.avatarsUsed} /> : <div className="w-full h-full flex justify-center items-center">
+          <ReactLoading type={'cylon'} color={'#e87223'} height={'40px'} width={'40px'} />
+        </div>}
+        {
+          !isLoading ? <Referral data={data?.data?.data?.user} /> : <div className="w-full h-full flex justify-center items-center">
+            <ReactLoading type={'cylon'} color={'#e87223'} height={'40px'} width={'40px'} />
+          </div>
+        }
       </div>
       <section className=''>
         <h2 className='section-title mb-[10px] md:mb-5'>Projects Created</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
 
-          {projectsData?.map((data: any, _: any) => (
-            <NeurcgCard
-              key={data?._id}
-              title={data?.projectName}
-              thumbnail={getImageUrl(data?.projectAvatar)}
-              url={data?.projectVideoLink}
-            />
-          ))}
+          {projectsData?.map((data: any, _: any) => {
+            if (!isLoading) {
+              return (
+                <NeurcgCard
+                  key={data?._id}
+                  title={data?.projectName}
+                  thumbnail={getImageUrl(data?.projectAvatar)}
+                  url={data?.projectVideoLink}
+                />
+              )
+            }
+            else {
+              return (
+                <div key={data?._id} className="w-full h-full flex justify-center items-center">
+                  <ReactLoading type={'cylon'} color={'#e87223'} height={'40px'} width={'40px'} />
+                </div>
+              )
+            }
+          })}
         </div>
       </section>
 
