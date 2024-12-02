@@ -73,7 +73,7 @@ const ProfilePage = () => {
 
       {/* Add more profile information here */}
       <div className="bg-white rounded-[8px] p-5 md:px-[52px] md:py-[45px] border relative">
-        <h4 className='pb-3'>Last Logged In - {lastLogged.toDateString()} |  {lastLogged.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: true })}</h4>
+        {!isLoading && <h4 className='pb-3'>Last Logged In - {lastLogged.toDateString()} |  {lastLogged.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: true })}</h4>}
         <MdDelete className="text-red-500 cursor-pointer text-lg w-10 h-10 absolute right-3 top-3" onClick={handleOpen} />
         <div className="flex md:flex-row flex-col gap-y-4 justify-between md:items-center mb:mb-10">
           <div className="custom relative w-[177px] min-w-[177px] h-[177px] ">
