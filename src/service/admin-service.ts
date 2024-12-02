@@ -28,6 +28,11 @@ export const addCreditsService = async (route: string, payload: any) => {
     return axiosInstance.post(route, payload)
 }
 
+export const deleteUserService = async (route: string) => {
+    const axiosInstance = await getAxiosInstance()
+    return axiosInstance.delete(route)
+}
+
 export const getIncomeService = async (routeWithQuery: string) => {
     const axiosInstance = await getAxiosInstance()
     return axiosInstance.get(routeWithQuery)

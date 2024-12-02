@@ -2,26 +2,29 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 import { useState, useTransition } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import ReactLoading from 'react-loading';
 import AvatarsCreated from '@/components/AvatarsCreated';
 import Referral from '@/components/Referral';
 import NeurcgCard from '@/components/NeurcgCard';
 import useSWR from 'swr';
-import { addCreditsService, getASingleUserService } from '@/service/admin-service';
+import { addCreditsService, deleteUserService, getASingleUserService } from '@/service/admin-service';
 import { getImageUrl } from '@/utils';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { MdDelete } from "react-icons/md";
+import Modal from 'react-modal';
 
 const ProfilePage = () => {
+  const router = useRouter()
+  const [open, setOpen] = useState(false)
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { id } = useParams()
   const [isPending, startTransition] = useTransition()
   const { data, isLoading, error } = useSWR(`/admin/users/${id}`, getASingleUserService)
   const [credits, setCredits] = useState<any>()
   const projectsData = data?.data?.data?.projects
-
   const handleCreditsChange = (e: any) => {
     setCredits(e.target.value)
   }
@@ -37,13 +40,30 @@ const ProfilePage = () => {
         const res = await addCreditsService(`/admin/users/add-credit/${id}`, { amount: credits })
         if (res.status == 200) {
           setCredits('')
-          toast.success('Credits added successfully', { position: 'top-right' })
+          toast.success('Credits added successfully to user', { position: 'top-right' })
         }
       } catch (error) {
         toast.error('An error occurred adding credits')
       }
     })
   }
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
+  const handleDeleteUser = () => {
+    startTransition(async () => {
+      try {
+        const res = await deleteUserService(`/admin/users/${id}`)
+        if (res.status == 200) {
+          toast.success('User deleted successfully', { position: 'top-right' })
+          router.push('/users')
+        }
+      } catch (error) {
+        toast.error('An error occurred deleting user')
+      }
+    })
+  }
+  const lastLogged = new Date(data?.data?.data?.user?.lastLoggedIn as any)
   return (
     <div className="">
       <Link href={'/users'} className='cursor-pointer p-4 mb-4'>
@@ -52,7 +72,9 @@ const ProfilePage = () => {
       <h1 className="text-2xl font-bold mb-4 hidden">Customer Profile: {id}</h1>
 
       {/* Add more profile information here */}
-      <div className="bg-white rounded-[8px] p-5 md:px-[52px] md:py-[45px] ">
+      <div className="bg-white rounded-[8px] p-5 md:px-[52px] md:py-[45px] border relative">
+        <h4 className='pb-3'>Last Logged In - {lastLogged.toDateString()} |  {lastLogged.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: true })}</h4>
+        <MdDelete className="text-red-500 cursor-pointer text-lg w-10 h-10 absolute right-3 top-3" onClick={handleOpen} />
         <div className="flex md:flex-row flex-col gap-y-4 justify-between md:items-center mb:mb-10">
           <div className="custom relative w-[177px] min-w-[177px] h-[177px] ">
             <input
@@ -154,7 +176,22 @@ const ProfilePage = () => {
           })}
         </div>
       </section>
-
+      {
+        <Modal
+          isOpen={open}
+          onRequestClose={handleClose}
+          className="fixed inset-0 flex items-center justify-center z-[4] bg-transparent"
+          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+        >
+          <div className="bg-white p-5 rounded-lg w-1/3">
+            <h2 className="text-xl mb-4">Are you sure you want to delete this user?</h2>
+            <div className="flex justify-end gap-4">
+              <button onClick={handleClose} className="bg-gray-300 text-black p-3 rounded-lg">Cancel</button>
+              <button className="bg-red-500 text-white p-3 rounded-lg" onClick={handleDeleteUser}>{!isPending ? 'Delete Permanently' : 'Deleting...'}</button>
+            </div>
+          </div>
+        </Modal>
+      }
     </div>
   );
 };
