@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import ReactLoading from 'react-loading';
@@ -10,7 +10,7 @@ import Referral from '@/components/Referral';
 import NeurcgCard from '@/components/NeurcgCard';
 import useSWR from 'swr';
 import { addCreditsService, deleteUserService, getASingleUserService } from '@/service/admin-service';
-import { getImageUrl } from '@/utils';
+import { getImageUrl, getImageUrlFromFlaskProxy } from '@/utils';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { MdDelete } from "react-icons/md";
@@ -23,6 +23,18 @@ const ProfilePage = () => {
   const { id } = useParams()
   const [isPending, startTransition] = useTransition()
   const { data, isLoading, error } = useSWR(`/admin/users/${id}`, getASingleUserService)
+  const [profilePic, setProfilePic] = useState<string | null>(null)
+
+  //data?.data?.data?.user?.profilePic
+  const fetchProfilePic = async () => {
+    const response = await getImageUrlFromFlaskProxy("avatars/avatar-1729584529460.png")
+    setProfilePic(response ?? null)
+  }
+
+  useEffect(() => {
+    fetchProfilePic()
+  }, [data?.data?.data?.user?.profilePic])
+
   const [credits, setCredits] = useState<any>()
   const projectsData = data?.data?.data?.projects
   const handleCreditsChange = (e: any) => {
@@ -101,13 +113,13 @@ const ProfilePage = () => {
             ) : (
               <div className="grid place-items-center h-full w-full">
                 <div>
-                  <Image
-                    src={getImageUrl(data?.data?.data?.user?.profilePic)}
+                  {profilePic && <Image
+                    src={profilePic}
                     alt="No image uploaded yet"
                     width={177}
                     height={177}
                     className="rounded-full"
-                  />
+                  />}
                 </div>
               </div>
             )}
