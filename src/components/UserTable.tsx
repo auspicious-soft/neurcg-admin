@@ -30,6 +30,7 @@ const UserTable = (props: any) => {
               <th>Subscription Type</th>
               <th>Email Address</th>
               <th>Action</th>
+              <th>Credits Balance</th>
             </tr>
           </thead>
           <tbody>
@@ -50,6 +51,7 @@ const UserTable = (props: any) => {
                         View
                       </button>
                     </td>
+                    <td>{customer.creditsLeft}</td>
                   </tr>
                 ))
             ) : (
