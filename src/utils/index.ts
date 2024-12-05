@@ -46,6 +46,8 @@ export const getImageUrlFromFlaskProxy = async (subpath: string): Promise<string
 
         // Convert the arraybuffer to a Blob 
         const blob = new Blob([response.data], { type: response.headers['content-type'] });
+        console.log('response.data: ', response.data);
+        console.log('blob: ', blob);
         return URL.createObjectURL(blob);
     } catch (error) {
         return undefined;
