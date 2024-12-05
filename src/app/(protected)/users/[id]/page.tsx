@@ -28,6 +28,7 @@ const ProfilePage = () => {
   //data?.data?.data?.user?.profilePic
   const fetchProfilePic = async () => {
     const response = await getImageUrlFromFlaskProxy("avatars/avatar-1729584529460.png")
+    console.log('response: ', response);
     setProfilePic(response ?? null)
   }
 
