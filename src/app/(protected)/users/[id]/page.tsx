@@ -196,7 +196,7 @@ const ProfilePage = () => {
           className="fixed inset-0 flex items-center justify-center z-[4] bg-transparent"
           overlayClassName="fixed inset-0 bg-black bg-opacity-50"
         >
-          <div className="bg-white p-5 rounded-lg w-1/3">
+          <div className="bg-white p-5 rounded-lg w-1/3 min-w-[290px]">
             <h2 className="text-xl mb-4">Are you sure you want to delete this user?</h2>
             <div className="flex justify-end gap-4">
               <button onClick={handleClose} className="bg-gray-300 text-black p-3 rounded-lg">Cancel</button>
