@@ -43,6 +43,7 @@ export const getImageUrlFromFlaskProxy = async (subpath: string): Promise<string
         const response = await axiosInstance.post(`/file`, { subpath }, {
             responseType: 'arraybuffer'
         })
+        console.log('response in api----------> ', response);
 
         // Convert the arraybuffer to a Blob 
         const blob = new Blob([response.data], { type: response.headers['content-type'] });
