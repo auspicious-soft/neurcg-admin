@@ -37,7 +37,7 @@ export const getImageUrl = (subPath: string): string => {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getImageUrlFromFlaskProxy = async (subpath: string): Promise<string | undefined> => {
+export const getMediaUrlFromFlaskProxy = async (subpath: string): Promise<string | undefined> => {
     try {
         const axiosInstance = await getAxiosInstance();
         const response = await axiosInstance.post(`/file`, { subpath }, {

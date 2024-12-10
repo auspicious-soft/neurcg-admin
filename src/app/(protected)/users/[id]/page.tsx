@@ -10,7 +10,7 @@ import Referral from '@/components/Referral';
 import NeurcgCard from '@/components/NeurcgCard';
 import useSWR from 'swr';
 import { addCreditsService, deleteUserService, getASingleUserService } from '@/service/admin-service';
-import { getImageUrl, getImageUrlFromFlaskProxy } from '@/utils';
+import { getImageUrl, getMediaUrlFromFlaskProxy } from '@/utils';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { MdDelete } from "react-icons/md";
@@ -25,15 +25,15 @@ const ProfilePage = () => {
   const { data, isLoading, error } = useSWR(`/admin/users/${id}`, getASingleUserService)
   const [profilePic, setProfilePic] = useState<string | null>(null)
 
-  //data?.data?.data?.user?.profilePic
+  const userProfile = data?.data?.data?.user?.profilePic
   const fetchProfilePic = async () => {
-    const image = await getImageUrlFromFlaskProxy("avatars/avatar-1729584529460.png")
+    const image = await getMediaUrlFromFlaskProxy(userProfile)
     setProfilePic(image ?? null)
   }
 
   useEffect(() => {
     fetchProfilePic()
-  }, [data?.data?.data?.user?.profilePic])
+  }, [userProfile])
 
   const [credits, setCredits] = useState<any>()
   const projectsData = data?.data?.data?.projects
