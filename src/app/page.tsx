@@ -10,6 +10,7 @@ import { redirect } from "next/navigation";
 import useSWR from "swr";
 import { getDashboardStatsService } from "@/service/admin-service";
 import ReactLoading from 'react-loading';
+import { getImageUrl } from "@/utils";
 
 export default function Home() {
   const session = useSession()
@@ -40,7 +41,7 @@ export default function Home() {
       id: 4,
       text: "Total User",
       value: data?.data?.data?.totalUsers as number,
-    },
+    },  
   ]
 
   if (isLoading) {
@@ -80,8 +81,9 @@ export default function Home() {
           }) => (
             <NewUserCard
               key={data._id}
+              userId = {data._id}
               title={data.firstName + ' ' + data.lastName}
-              thumbnail={data.profilePic}
+              thumbnail={data.profilePic?.includes('lh3.googleusercontent.com') ? data.profilePic : getImageUrl(data.profilePic)}
             />
           ))}
         </div>

@@ -1,16 +1,21 @@
 "use client";
 import React from "react";
 import Image, { StaticImageData } from "next/image";
+import { useRouter } from "next/navigation";
 
 interface VideoCardProps {
   title: string;
   thumbnail?: string | StaticImageData; // Optional thumbnail
+  userId?: string;
 }
 
-const NewUserCard: React.FC<VideoCardProps> = ({ title, thumbnail }) => {
+const NewUserCard: React.FC<VideoCardProps> = ({ title, thumbnail, userId }) => {
+  const router = useRouter();
   return (
     <>
-      <div className="p-1 rounded-lg bg-white cursor-pointer">
+      <div className="p-1 rounded-lg bg-white cursor-pointer" onClick={()=> {
+        router.push(`/users/${userId}`)
+      }}>
         <div className="player-wrapper relative">
           {thumbnail &&
             <Image
