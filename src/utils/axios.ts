@@ -3,7 +3,7 @@
 
 import axios from "axios";
 import { getTokenCustom } from "@/actions";
-import https from "https";
+// import https from "https";
 
 export const axiosInstance = axios.create({
     baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`,
@@ -11,11 +11,11 @@ export const axiosInstance = axios.create({
         'Content-Type': 'application/json',
         'role' : 'admin' 
     },
-    httpsAgent: new https.Agent({ 
-        rejectUnauthorized: false,
-        requestCert: false,
-        secureOptions: require('constants').SSL_OP_NO_TLSv1_2
-    })
+    // httpsAgent: new https.Agent({ 
+    //     rejectUnauthorized: false,
+    //     requestCert: false,
+    //     secureOptions: require('constants').SSL_OP_NO_TLSv1_2
+    // })
 })
 
 const createAuthInstance = async () => {
@@ -28,15 +28,15 @@ const createAuthInstance = async () => {
                 'role' : 'admin',
                 'Content-Type': 'application/json'
             },
-            httpsAgent: new https.Agent({
-                rejectUnauthorized: false,
-                requestCert: false,
-                secureOptions: require('constants').SSL_OP_NO_TLSv1_2
-            }),
-            proxy: false,
-            validateStatus: function (status) {
-                return status >= 200 && status < 500; // Accept all status codes less than 500
-            }
+            // httpsAgent: new https.Agent({
+            //     rejectUnauthorized: false,
+            //     requestCert: false,
+            //     secureOptions: require('constants').SSL_OP_NO_TLSv1_2
+            // }),
+            // proxy: false,
+            // validateStatus: function (status) {
+            //     return status >= 200 && status < 500; // Accept all status codes less than 500
+            // }
         })
     } catch (error) {
         console.error('Error getting token:', error);
