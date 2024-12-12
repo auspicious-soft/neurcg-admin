@@ -11,6 +11,7 @@ import useSWR from "swr";
 import { getDashboardStatsService } from "@/service/admin-service";
 import ReactLoading from 'react-loading';
 import { getImageUrl } from "@/utils";
+import profilePic from "@/assets/images/profilepic.png";
 
 export default function Home() {
   const session = useSession()
@@ -83,7 +84,7 @@ export default function Home() {
               key={data._id}
               userId = {data._id}
               title={data.firstName + ' ' + data.lastName}
-              thumbnail={data.profilePic?.includes('lh3.googleusercontent.com') ? data.profilePic : getImageUrl(data.profilePic)}
+              thumbnail={data.profilePic?.includes('lh3.googleusercontent.com') ? data.profilePic : data.profilePic ? getImageUrl(data.profilePic) : profilePic}
             />
           ))}
         </div>
