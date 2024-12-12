@@ -11,7 +11,7 @@ import useSWR from "swr";
 import { getDashboardStatsService } from "@/service/admin-service";
 import ReactLoading from 'react-loading';
 import { getImageUrl } from "@/utils";
-import profilePic from "@/assets/images/profilepic.png";
+import profilePic from "@/assets/images/wave-bg.png";
 
 export default function Home() {
   const session = useSession()
