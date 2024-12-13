@@ -4,7 +4,7 @@
 import React, { useState, useCallback, useEffect, useTransition } from "react";
 import Modal from "react-modal";
 import Cropper, { Area } from "react-easy-crop";
-// import Image from "next/image";
+import LoadingGif from '@/assets/loading-gif.gif'
 import { DeleteIcon } from "@/utils/svgIcons";
 import deleteCross from "@/assets/images/delete.svg";
 import useSWR from "swr";
@@ -259,7 +259,7 @@ const AvatarSection = () => {
             <Image
               width={300}
               height={300}
-              src={avatarImages[avatar._id] ?? ``}
+              src={avatarImages[avatar._id] ?? LoadingGif}
               alt="Avatar"
               className="rounded-[5px] object-cover"
             />
