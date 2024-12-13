@@ -10,7 +10,7 @@ import Referral from '@/components/Referral';
 import NeurcgCard from '@/components/NeurcgCard';
 import useSWR from 'swr';
 import { addCreditsService, deleteUserService, getASingleUserService } from '@/service/admin-service';
-import { getImageUrl, getMediaUrlFromFlaskProxy } from '@/utils';
+import { getAvatarsUsedFromFlask, getMediaUrlFromFlaskProxy } from '@/utils';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { MdDelete } from "react-icons/md";
@@ -25,17 +25,57 @@ const ProfilePage = () => {
   const { data, isLoading, error } = useSWR(`/admin/users/${id}`, getASingleUserService)
   const [profilePic, setProfilePic] = useState<string | null>(null)
   const userProfile = data?.data?.data?.user?.profilePic
-  const fetchProfilePic = async () => {
-    const image = userProfile?.includes('lh3.googleusercontent.com') ? userProfile : await getMediaUrlFromFlaskProxy(userProfile)
-    setProfilePic(image ?? null)
-  }
 
   useEffect(() => {
+    const fetchProfilePic = async () => {
+      const image = userProfile?.includes('lh3.googleusercontent.com') ? userProfile : await getMediaUrlFromFlaskProxy(userProfile)
+      setProfilePic(image ?? null)
+    }
     fetchProfilePic()
   }, [userProfile])
 
-  const [credits, setCredits] = useState<any>()
+
   const projectsData = data?.data?.data?.projects
+  const [projectPic, setProjectPic] = useState<any>([])
+  const [projectVideoLink, setProjectVideoLink] = useState<any>([])
+
+  useEffect(() => {
+    const fetchProjectPic = async () => {
+      if (projectsData) {
+        const imagePromises = projectsData?.map(async (project: any) => {
+          console.log('project.projectAvata: ', project.projectAvatar)
+          const imageUrl = await getAvatarsUsedFromFlask(project.projectAvatar);
+          return { projectId: project._id, imageUrl }
+        })
+
+        const imageResultsArrayOfObjects = await Promise.all(imagePromises);
+        const imageResults = imageResultsArrayOfObjects.reduce((acc: any, curr: any) => {
+          acc[curr.projectId] = curr.imageUrl;
+          return acc;
+        }, {})
+        setProjectPic(imageResults);
+      }
+    }
+    const fetchProjectcVideoLink = async () => {
+      if (projectsData) {
+        const videoPromises = projectsData?.map(async (project: any) => {
+          const videoUrl = await getMediaUrlFromFlaskProxy(project.projectVideoLink);
+          return { projectId: project._id, videoUrl }
+        })
+
+        const videoResultsArrayOfObjects = await Promise.all(videoPromises);
+        const videoResults = videoResultsArrayOfObjects.reduce((acc: any, curr: any) => {
+          acc[curr.projectId] = curr.videoUrl;
+          return acc;
+        }, {})
+        setProjectVideoLink(videoResults);
+      }
+    }
+    fetchProjectcVideoLink()
+    fetchProjectPic()
+  }, [projectsData, userProfile])
+
+  const [credits, setCredits] = useState<any>()
   const handleCreditsChange = (e: any) => {
     setCredits(e.target.value)
   }
@@ -75,6 +115,7 @@ const ProfilePage = () => {
     })
   }
   const lastLogged = new Date(data?.data?.data?.user?.lastLoggedIn as any)
+
   return (
     <div className="">
       <Link href={'/users'} className='cursor-pointer p-4 mb-4'>
@@ -172,8 +213,8 @@ const ProfilePage = () => {
                 <NeurcgCard
                   key={data?._id}
                   title={data?.projectName}
-                  thumbnail={getImageUrl(data?.projectAvatar)}
-                  url={data?.projectVideoLink}
+                  thumbnail={projectPic[data?._id]}
+                  url={projectVideoLink[data?._id]}
                 />
               )
             }
