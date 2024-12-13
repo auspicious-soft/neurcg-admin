@@ -21,11 +21,10 @@ const NewUserCard: React.FC<VideoCardProps> = ({ title, thumbnail, userId }) => 
             <Image
               src={thumbnail}
               alt={title}
-              className="w-full !h-[300px] rounded-lg"
+              className="w-full !h-[300px] rounded-lg object-cover"
               width={500} 
               height={300}
               layout="responsive"
-              objectFit="cover"
             />
           }
           <div className="mt-[15px] mb-[11px] flex items-center gap-[10px] px-[14px]">
