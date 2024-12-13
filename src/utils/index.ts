@@ -1,5 +1,5 @@
 import { getAxiosInstance } from "./axios"
-
+import profilePic from "@/assets/images/wave-bg.png";
 export const convertDateToMonth = (date: string) => {
     const str = date.slice(5)
     switch (str) {
@@ -50,4 +50,9 @@ export const getMediaUrlFromFlaskProxy = async (subpath: string): Promise<string
     } catch (error) {
         return undefined;
     }
-};
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+export const getImage = async(data: any) => {
+    return data.profilePic?.includes('lh3.googleusercontent.com') ? data.profilePic : data.profilePic ? await getMediaUrlFromFlaskProxy(data.profilePic) : profilePic
+}

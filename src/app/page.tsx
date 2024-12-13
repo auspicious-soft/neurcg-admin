@@ -3,23 +3,45 @@
 import IncomeGraph from "@/components/IncomeGraph";
 import UserCards from "@/components/UserCards";
 import UsersGraph from "@/components/UsersGraph";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import NewUserCard from "@/components/NewUserCard";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import useSWR from "swr";
 import { getDashboardStatsService } from "@/service/admin-service";
 import ReactLoading from 'react-loading';
-import { getImageUrl } from "@/utils";
+import { getImage } from "@/utils";
 import profilePic from "@/assets/images/wave-bg.png";
 
 export default function Home() {
   const session = useSession()
+  const [userImages, setUserImages] = useState<{[key: string]: string}>({})
+
   useEffect(() => {
     if (!session.data) redirect('/login')
   }, [session])
 
   const { data, isLoading, error } = useSWR('/admin/dashboard', getDashboardStatsService)
+  
+  // Fetch images for new users
+  useEffect(() => {
+    const fetchUserImages = async () => {
+      if (data?.data?.data?.newUsersData) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const imagePromises = data.data.data.newUsersData.map(async (user: any) => {
+          const image = await getImage(user);
+          return { [user._id]: image };
+        });
+
+        const imageResults = await Promise.all(imagePromises);
+        const imagesMap = imageResults.reduce((acc, curr) => ({ ...acc, ...curr }), {});
+        setUserImages(imagesMap);
+      }
+    };
+
+    fetchUserImages();
+  }, [data]);
+
   const incomeThisMonth = data?.data?.data?.incomeThisMonth as number
   const UserData = data?.data?.data?.newUsersData
   const useCardData = [
@@ -42,7 +64,7 @@ export default function Home() {
       id: 4,
       text: "Total User",
       value: data?.data?.data?.totalUsers as number,
-    },  
+    },
   ]
 
   if (isLoading) {
@@ -81,10 +103,10 @@ export default function Home() {
             profilePic: string;
           }) => (
             <NewUserCard
-              key={data._id}
-              userId = {data._id}
-              title={data.firstName + ' ' + data.lastName}
-              thumbnail={data.profilePic?.includes('lh3.googleusercontent.com') ? data.profilePic : data.profilePic ? getImageUrl(data.profilePic) : profilePic}
+              key={data?._id}
+              userId={data?._id}
+              title={`${data?.firstName} ${data?.lastName}`}
+              thumbnail={userImages[data?._id] || profilePic}
             />
           ))}
         </div>
