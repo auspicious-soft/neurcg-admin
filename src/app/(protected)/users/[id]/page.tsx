@@ -27,7 +27,7 @@ const ProfilePage = () => {
 
   const userProfile = data?.data?.data?.user?.profilePic
   const fetchProfilePic = async () => {
-    const image = await getMediaUrlFromFlaskProxy(userProfile)
+    const image = userProfile?.includes('lh3.googleusercontent.com') ? userProfile : await getMediaUrlFromFlaskProxy(userProfile)
     setProfilePic(image ?? null)
   }
 
