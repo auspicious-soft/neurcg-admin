@@ -33,7 +33,9 @@ export default function Home() {
           return { [user._id]: image };
         });
 
+        console.log('imagePromises: ', imagePromises);
         const imageResults = await Promise.all(imagePromises);
+        console.log('imageResults: ', imageResults);
         const imagesMap = imageResults.reduce((acc, curr) => ({ ...acc, ...curr }), {});
         setUserImages(imagesMap);
       }
