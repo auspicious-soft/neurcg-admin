@@ -259,7 +259,7 @@ const AvatarSection = () => {
             <Image
               width={300}
               height={300}
-              src={avatarImages[avatar._id] ?? `https://picsum.photos/200/300`}
+              src={avatarImages[avatar._id] ?? ``}
               alt="Avatar"
               className="rounded-[5px] object-cover"
             />
