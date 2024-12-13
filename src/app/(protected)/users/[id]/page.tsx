@@ -22,7 +22,7 @@ const ProfilePage = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { id } = useParams()
   const [isPending, startTransition] = useTransition()
-  const { data, isLoading, error } = useSWR(`/admin/users/${id}`, getASingleUserService)
+  const { data, isLoading, error } = useSWR(`/admin/users/${id}`, getASingleUserService,{ revalidateOnFocus: false })
   const [profilePic, setProfilePic] = useState<string | null>(null)
   const userProfile = data?.data?.data?.user?.profilePic
 
@@ -43,7 +43,6 @@ const ProfilePage = () => {
     const fetchProjectPic = async () => {
       if (projectsData) {
         const imagePromises = projectsData?.map(async (project: any) => {
-          console.log('project.projectAvata: ', project.projectAvatar)
           const imageUrl = await getAvatarsUsedFromFlask(project.projectAvatar);
           return { projectId: project._id, imageUrl }
         })
