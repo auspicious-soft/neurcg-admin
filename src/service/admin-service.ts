@@ -57,7 +57,11 @@ export const sendNotificationToSpecificUsers = async (payload: any) => {
 // Avatars
 export const addAvatarService = async (route: string, payload: any) => {
     const axiosInstance = await getAxiosInstance()
-    return axiosInstance.post(route, payload)
+    return axiosInstance.post(route, payload, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
 }
 
 export const getAvatarsService = async (route: string) => {

@@ -10,9 +10,9 @@ import deleteCross from "@/assets/images/delete.svg";
 import useSWR from "swr";
 import { getAvatarsService, deleteAvatarService, addAvatarService } from "@/service/admin-service";
 import { toast } from "sonner";
-import { deleteFileFromS3, generateSignedUrlToGet, generateSignedUrlToUploadOn } from "@/actions";
+import { deleteFileFromS3 } from "@/actions";
 import Image from "next/image";
-import { getImageUrl } from "@/utils";
+import { getAvatarImageUrl } from "@/utils";
 import ReactLoading from 'react-loading';
 
 
@@ -31,7 +31,28 @@ const getRadianAngle = (degreeValue: number) => {
 
 const AvatarSection = () => {
   const { data, isLoading, mutate } = useSWR('/admin/avatars', getAvatarsService);
-  const avatarsFetched = data?.data?.data || [];
+  const [avatarsFetched, setAvatarsFetched] = useState([]);
+  const [avatarImages, setAvatarImages] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    const fetchAvatarImages = async () => {
+      if (data?.data?.data) {
+        const avatars = data.data.data;
+        setAvatarsFetched(avatars);
+
+        const imagePromises = avatars.map(async (avatar: any) => {
+          const imageUrl = await getAvatarImageUrl(avatar);
+          return { [avatar._id]: imageUrl };
+        });
+
+        const imageResults = await Promise.all(imagePromises);
+        const imagesMap = imageResults.reduce((acc, curr) => ({ ...acc, ...curr }), {});
+        setAvatarImages(imagesMap);
+      }
+    };
+
+    fetchAvatarImages();
+  }, [data]);
   const [selectedFile, setSelectedFile] = useState<{ file: File, preview: string } | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -155,28 +176,32 @@ const AvatarSection = () => {
         }
         const timestamp = Date.now();
         const extension = selectedFile.file.name.split('.').pop();
+        const file = new File([croppedBlob], selectedFile.file.name, { type: croppedBlob.type })
         const filename = `avatar-${timestamp}.${extension}`;
-
+        const avatarUrl = `avatars/${filename}`
         // Get signed URL for upload
-        const uploadUrl = await generateSignedUrlToUploadOn(filename, croppedBlob.type);
+        // const uploadUrl = await generateSignedUrlToUploadOn(filename, croppedBlob.type);
 
-        // Upload to S3
-        await fetch(uploadUrl, {
-          method: 'PUT',
-          body: croppedBlob,
-          headers: {
-            'Content-Type': croppedBlob.type,
-          },
-        });
+        // // Upload to S3
+        // await fetch(uploadUrl, {
+        //   method: 'PUT',
+        //   body: croppedBlob,
+        //   headers: {
+        //     'Content-Type': croppedBlob.type,
+        //   },
+        // });
 
-        const imageKey = `avatars/${filename}`;
-        const avatarUrl = imageKey;
         // if (avatarUrl) {
-          // avatarUrl = avatarUrl.replace(process.env.NEXT_PUBLIC_AWS_BUCKET_PATH as string, '');
+        // avatarUrl = avatarUrl.replace(process.env.NEXT_PUBLIC_AWS_BUCKET_PATH as string, '');
         // }
 
         // Save to backend
-        await addAvatarService('/admin/avatars', { avatarUrl, name: filename });
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('avatarUrl', avatarUrl);
+        formData.append('name', filename);
+
+        await addAvatarService('/admin/avatars', formData);
         toast.success('Avatar uploaded successfully');
         setIsModalOpen(false);
 
@@ -229,9 +254,15 @@ const AvatarSection = () => {
         </button>
       </div>
       <div className="grid grid-cols-6 gap-5 mt-5">
-        {!isLoading ? avatarsFetched.map((avatar: any, index: string) => (
+        {!isLoading ? avatarsFetched.map((avatar: any, index: any) => (
           <div key={index} className="relative group">
-            <Image width={300} height={300} src={getImageUrl(avatar.avatarUrl as string) ?? `https://picsum.photos/200/300`} alt="Avatar" className="rounded-[5px] object-cover" />
+            <Image
+              width={300}
+              height={300}
+              src={avatarImages[avatar._id] ?? `https://picsum.photos/200/300`}
+              alt="Avatar"
+              className="rounded-[5px] object-cover"
+            />
             <div className="absolute left-1/2 -translate-x-1/2 bottom-[14px]">
               <button
                 className="justify-center bg-[#E87223] text-white text-xs flex items-center gap-2.5 py-1 px-3 rounded opacity-0 group-hover:opacity-100 transition-opacity"

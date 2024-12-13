@@ -56,3 +56,8 @@ export const getMediaUrlFromFlaskProxy = async (subpath: string): Promise<string
 export const getImage = async(data: any) => {
     return data.profilePic?.includes('lh3.googleusercontent.com') ? data.profilePic : data.profilePic ? await getMediaUrlFromFlaskProxy(data.profilePic) : profilePic
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getAvatarImageUrl = async(avatar: any) => {
+    return avatar.avatarUrl ? await getMediaUrlFromFlaskProxy(avatar.avatarUrl) : profilePic
+}
