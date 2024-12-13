@@ -61,3 +61,8 @@ export const getImage = async(data: any) => {
 export const getAvatarImageUrl = async(avatar: any) => {
     return avatar.avatarUrl ? await getMediaUrlFromFlaskProxy(avatar.avatarUrl) : profilePic
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getAvatarsUsedFromFlask = async (avatar: any) => {
+   return avatar ? await getMediaUrlFromFlaskProxy(avatar) : profilePic
+}

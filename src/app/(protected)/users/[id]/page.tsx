@@ -24,7 +24,6 @@ const ProfilePage = () => {
   const [isPending, startTransition] = useTransition()
   const { data, isLoading, error } = useSWR(`/admin/users/${id}`, getASingleUserService)
   const [profilePic, setProfilePic] = useState<string | null>(null)
-
   const userProfile = data?.data?.data?.user?.profilePic
   const fetchProfilePic = async () => {
     const image = userProfile?.includes('lh3.googleusercontent.com') ? userProfile : await getMediaUrlFromFlaskProxy(userProfile)
